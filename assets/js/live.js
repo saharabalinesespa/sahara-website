@@ -28,6 +28,12 @@
     var btn = $('.est .btn'); btn.textContent = 'Confirm booking'; btn.classList.remove('wa');
     var info = document.createElement('p'); info.id = 'live-info'; info.style.cssText = 'font-size:13.5px;margin-top:12px'; $('.est').parentNode.insertBefore(info, $('#bk-err'));
     var busy = false, last = 0;
+    // date picker: min today (Dubai), max 1 year, opens on click anywhere in the field
+    var dnow = new Date(Date.now() + 4 * 3600e3), pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    dateEl.min = dnow.getUTCFullYear() + '-' + pad(dnow.getUTCMonth() + 1) + '-' + pad(dnow.getUTCDate());
+    dateEl.max = (dnow.getUTCFullYear() + 1) + '-' + pad(dnow.getUTCMonth() + 1) + '-' + pad(dnow.getUTCDate());
+    dateEl.style.colorScheme = 'dark'; dateEl.style.cursor = 'pointer';
+    dateEl.addEventListener('click', function () { try { dateEl.showPicker(); } catch (e) {} });
 
     function sel() {
       var tx = $('#tx-opts .opt.on'); if (!tx) return null;
@@ -37,10 +43,10 @@
       var gOn = $('[data-g].on'), g = gOn ? +gOn.dataset.g : 1; if (g === 3) g = Math.max(3, Math.min(20, +$('#grp').value || 3));
       return { s: s, opt: opt, guests: g };
     }
-    function fillStaff(s) {
+    function fillStaff(s, guests) {
       var wrap = $('#pref-wrap'), sel2 = $('#wstaff'); var keep = sel2.value;
       var list = cat.staff.filter(function (st) { return st.services.indexOf(s.id) > -1; });
-      if (s.staff_count > 1 || list.length < 2) { wrap.classList.add('hide'); sel2.innerHTML = '<option value="">Any available therapist</option>'; return; }
+      if (s.staff_count > 1 || guests > 1 || list.length < 2) { wrap.classList.add('hide'); sel2.innerHTML = '<option value="">Any available therapist</option>'; return; }
       sel2.innerHTML = '<option value="">Any available therapist</option>' + list.map(function (st) { return '<option value="' + st.id + '">' + esc(st.name) + '</option>'; }).join('');
       sel2.value = keep; wrap.classList.remove('hide');
     }
@@ -48,7 +54,7 @@
       var x = sel(); err.textContent = '';
       if (!x) return;
       if (x.missing) { info.textContent = 'This service is booked by request — please use WhatsApp or the contact page.'; timeSel.innerHTML = '<option value="">—</option>'; return; }
-      fillStaff(x.s); info.textContent = '';
+      fillStaff(x.s, x.guests); info.textContent = '';
       api('POST', '/api/public/quote', { options: [x.opt.id], guests: x.guests, date: dateEl.value || undefined }).then(function (q) {
         est.textContent = aed(q.total); estN.textContent = x.s.name + (x.opt.minutes ? ' · ' + x.opt.minutes + ' min' : '') + ' · ' + x.guests + ' guest' + (x.guests > 1 ? 's' : '') + ' · VAT included';
         var dep = cat.policy.deposit_mode; if (cat.payments_enabled && dep !== 'none') {
