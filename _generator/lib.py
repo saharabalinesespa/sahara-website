@@ -58,7 +58,7 @@ def footer():
 <div class="fcols">
 <div><a class="brand" href="index.html"><img src="assets/img/logo-mark.webp" alt="" width="38" height="44"><span><b>SAHARA BALINESE</b><small>SPA &amp; SALON · DUBAI</small></span></a>
 <p style="font-size:14.5px;max-width:300px">Balinese spa &amp; salon treatments delivered to your home, hotel or villa across Dubai.</p>
-<p style="margin-top:14px"><a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a></p></div>
+<p style="margin-top:14px"><a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a> · <a href="{FACEBOOK}" target="_blank" rel="noopener">Facebook</a></p></div>
 <div><h4>Explore</h4><ul><li><a href="price-list.html">Price List</a></li><li><a href="packages.html">Packages</a></li><li><a href="bridal.html">Bridal</a></li><li><a href="gift-vouchers.html">Gift Vouchers</a></li><li><a href="meet-our-therapists.html">Our Therapists</a></li><li><a href="areas-we-serve.html">Areas We Serve</a></li><li><a href="reviews.html">Reviews</a></li><li><a href="faqs.html">FAQs</a></li><li><a href="about.html">About</a></li></ul></div>
 <div><h4>Services</h4><ul>{svc}<li><a href="book.html">Book a Treatment</a></li></ul></div>
 <div><h4>Contact</h4><ul><li>Mobile service across Dubai</li><li>Open {HOURS}</li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="tel:+{PHONE}">{PHONE_DISPLAY}</a></li><li><a href="tel:+{PHONE2}">{PHONE2_DISPLAY}</a></li><li><a href="{WA_HELLO}" target="_blank" rel="noopener">Chat on WhatsApp</a></li></ul></div>
@@ -70,6 +70,7 @@ def footer():
 {BADGE}'''
 
 def page(fname, title, desc, body, active="", schema=None, hero_img=None, extra_head=""):
+    LIVE=(f'<script>window.SAHARA_API="{API_BASE}"</script>\n<script src="assets/js/live.js" defer></script>\n' if API_BASE else "")
     canon=f"{BASE}/{'' if fname=='index.html' else fname}"
     sch="".join(f'<script type="application/ld+json">{json.dumps(s,ensure_ascii=False)}</script>' for s in (schema or []))
     return f'''<!DOCTYPE html>
@@ -96,7 +97,7 @@ def page(fname, title, desc, body, active="", schema=None, hero_img=None, extra_
 {footer()}
 <script src="assets/js/data.js"></script>
 <script src="assets/js/site.js"></script>
-<script src="assets/js/gold-dust.js" defer></script>
+{LIVE}<script src="assets/js/gold-dust.js" defer></script>
 </body>
 </html>
 '''

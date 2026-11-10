@@ -107,7 +107,7 @@ def treatment(it):
 def book():
     goals=[("Relax & unwind","balinese,swedish,reflexology,ayurvedic","Balinese and Swedish are our calming, full-body favourites."),("Muscle pain & tension","deep-tissue,hot-stone,cupping,sports","Firmer treatments for knots, stiffness and recovery."),("Pregnancy & new mums","prenatal,postnatal","Gentle, supportive massage before and after birth."),("Glow & skin","rejuvenating-facial,express-facial","Facials tailored to your skin."),("Body renewal","body-scrub,express-body-scrub","Scrubs to exfoliate and refresh."),("Nails & more","manicure,pedicure,mani-pedi,couple,four-hands","Polish, plus treatments for two.")]
     gb="".join(f'<button type="button" class="chip" data-goal="{g[1]}" data-note="{esc(g[2])}">{esc(g[0])}</button>' for g in goals)
-    body=pagehero("Book",'Book a treatment <em>at home</em>',"Choose your treatment, pick a time and send your request on WhatsApp. We confirm personally.",crumbs(("Book",None)))+f'''
+    body=pagehero("Book",'Book a treatment <em>at home</em>',("Choose your treatment, pick a free time and confirm online. Your therapist arrives at your door." if API_BASE else "Choose your treatment, pick a time and send your request on WhatsApp. We confirm personally."),crumbs(("Book",None)))+f'''
 <section class="sec" style="padding-top:48px"><div class="wrap" id="booking" style="max-width:960px">
 <form id="bk-form" novalidate>
 <div class="panel"><h2><span class="stn">1</span>Choose your treatment</h2><p class="sub">Not sure? Tell us what you’re after.</p>
@@ -132,6 +132,6 @@ def book():
 <div class="est"><div><small id="est-note">Choose a treatment to see an estimate</small><span class="t" id="est-total">—</span></div><button class="btn wa" type="submit">Send on WhatsApp</button></div>
 <p class="err" id="bk-err" role="alert"></p><div id="bk-ok"></div>
 </form>
-<p style="font-size:14px;margin-top:22px">Prefer to book instantly? <a href="{FRESHA}" target="_blank" rel="noopener">Book on Fresha</a> · Cancellation: 3 hours’ notice — see <a href="terms-conditions.html">terms</a>.</p>
+<p style="font-size:14px;margin-top:22px">{"" if API_BASE else f'Prefer to book instantly? <a href="{FRESHA}" target="_blank" rel="noopener">Book on Fresha</a> · '}Cancellation: 3 hours’ notice — see <a href="terms-conditions.html">terms</a>.</p>
 </div></section>'''
     return page("book.html","Book a Home Spa Treatment in Dubai | Sahara Balinese Spa","Book Balinese massage, facials, body scrubs and nails at home in Dubai. Choose your treatment and time; we confirm on WhatsApp.",body,"book",[crumb_schema("book.html",("Book",None))])

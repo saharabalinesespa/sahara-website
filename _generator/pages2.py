@@ -125,3 +125,12 @@ def privacy():
 def notfound():
     body=f'<section class="sec center" style="min-height:60vh;display:flex;align-items:center"><div class="wrap"><span class="eyebrow">404</span><h1 style="margin:18px 0">Page not <em>found</em></h1><p class="lead" style="margin:0 auto">The page you’re looking for has moved or doesn’t exist.</p><div class="btns"><a class="btn" href="index.html">Home</a><a class="btn ghost" href="book.html">Book a Treatment</a></div></div></section>'
     return page("404.html","Page not found | Sahara Balinese Spa & Salon","Page not found.",body,"")
+
+
+def booking_confirmed():
+    body=pagehero("Booking",'Your <em>booking</em>',"Thank you for choosing Sahara.",crumbs(("Booking",None)))+'<section class="sec" style="padding-top:48px"><div class="wrap" style="max-width:760px"><div id="bk-confirm"><p>Loading your booking…</p></div></div></section>'
+    return page("booking-confirmed.html","Booking | Sahara Balinese Spa","Your Sahara booking.",body,"book",None,None,'<meta name="robots" content="noindex">')
+
+def booking_manage():
+    body=pagehero("Booking",'Manage your <em>booking</em>',"View or cancel your appointment.",crumbs(("Booking",None)))+'<section class="sec" style="padding-top:48px"><div class="wrap" style="max-width:760px"><div id="bk-manage"><p>Loading your booking…</p></div></div></section>'
+    return page("booking-manage.html","Manage Booking | Sahara Balinese Spa","Manage your Sahara booking.",body,"book",None,None,'<meta name="robots" content="noindex">')

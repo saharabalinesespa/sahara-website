@@ -4,9 +4,12 @@ PHONE_DISPLAY = "+971 50 205 2017"
 PHONE2 = "971506847716"
 PHONE2_DISPLAY = "+971 50 684 7716"
 EMAIL = "saharabalinesespa@gmail.com"
-FRESHA = "https://www.fresha.com/sahara-balinese"
-INSTAGRAM = "https://www.instagram.com/saharabalinesespa"
-BASE = "https://realplannet.github.io/Sahara"   # change when custom domain is attached
+FRESHA = "https://www.fresha.com/book-now/palma-spa-ru273iq3/all-offer?id=31958&pId=29721"
+INSTAGRAM = "https://www.instagram.com/saharabalinesehomespa/"
+FACEBOOK = "https://www.facebook.com/saharabalinesespa"
+import os as _os
+API_BASE = _os.environ.get("SAHARA_API", "").rstrip("/")   # set at build time to switch on live booking (see backend README)
+BASE = "https://saharabalinesespas.com"   # change when custom domain is attached
 HOURS = "10:00 AM – 12:00 AM, 7 days"
 MIN_ORDER = 200   # menu now has AED 200 items; old site rule was 250 - confirm with client
 
