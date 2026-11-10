@@ -35,8 +35,8 @@ function today(){var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffse
 function timeOptions(sel){
   if(!sel)return;
   var h,m,out='<option value="">Choose a time</option>';
-  for(h=9;h<=22;h++){for(m=0;m<60;m+=30){
-    if(h===22&&m>0)continue;
+  for(h=10;h<=23;h++){for(m=0;m<60;m+=30){
+    if(h===23&&m>0)continue;
     var ap=h>=12?'pm':'am',hh=h>12?h-12:h;
     out+='<option>'+hh+':'+(m?'30':'00')+' '+ap+'</option>';
   }}
@@ -195,4 +195,16 @@ if(cf){
     var url=wa(msg);window.open(url,'_blank');showResult($('#c-ok'),url);
   });
 }
+})();
+
+/* theme switch: dark (default) / light (white & black) */
+(function(){
+  var root=document.documentElement;
+  function sync(){var l=root.getAttribute('data-theme')==='light';document.querySelectorAll('.themebtn').forEach(function(b){b.setAttribute('aria-label',l?'Switch to dark mode':'Switch to light mode');b.setAttribute('aria-pressed',l?'true':'false')});var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',l?'#FFFFFF':'#0A0602')}
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.themebtn');if(!b)return;
+    var l=root.getAttribute('data-theme')==='light';
+    if(l)root.removeAttribute('data-theme');else root.setAttribute('data-theme','light');
+    try{localStorage.setItem('sahara-theme',l?'dark':'light')}catch(x){}
+    sync()});
+  sync();
 })();

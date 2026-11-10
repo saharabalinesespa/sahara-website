@@ -4,7 +4,7 @@ from data import *
 def esc(s): return H.escape(s, quote=True)
 WA = lambda msg="": f"https://wa.me/{PHONE}" + (f"?text={msg}" if msg else "")
 WA_HELLO = f"https://wa.me/{PHONE}?text=Hi%20Sahara%2C%20I%27d%20like%20to%20book%20a%20treatment."
-SLUG = {"balinese":"balinese-massage","aromatherapy":"aromatherapy-massage","deep-tissue":"deep-tissue-massage","hot-stone":"hot-stone-massage","thai":"thai-massage","prenatal":"prenatal-massage","cupping":"cupping-therapy","shiatsu":"shiatsu-massage","sports":"sports-massage","reflexology":"foot-reflexology"}
+SLUG = {"balinese":"balinese-massage","deep-tissue":"deep-tissue-massage","swedish":"swedish-massage","thai":"thai-massage","prenatal":"prenatal-massage","postnatal":"postnatal-massage","sports":"sports-massage","ayurvedic":"ayurvedic-massage","reflexology":"foot-massage-reflexology","lymphatic":"lymphatic-drainage-massage","modero":"modero-therapy","hot-stone":"hot-stone-massage","cupping":"cupping-therapy","four-hands":"four-hands-massage","couple":"couple-massage"}
 WA_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.7.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.6-1.3.1-.2 0-.4 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s1 2.5 1.1 2.7c.1.2 1.9 3 4.7 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3z"/></svg>'
 BADGE = '''<a href="https://realplannet.com" class="rp-badge" target="_blank" rel="noopener" title="Built by Real Plannet">
         <div class="rp-badge-orb">
@@ -48,7 +48,7 @@ def header(active):
 <header class="hdr"><div class="in">
 <a class="brand" href="index.html" aria-label="Sahara Balinese Spa &amp; Salon — home"><img src="assets/img/logo-mark.webp" alt="" width="38" height="44"><span><b>SAHARA BALINESE</b><small>SPA &amp; SALON · DUBAI</small></span></a>
 <ul class="nav">{nav}</ul>
-<div class="cta"><a class="btn sm ghost" href="ar.html" lang="ar">عربي</a><a class="btn sm" href="book.html">Book Now</a><button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="drawer"><i></i></button></div>
+<div class="cta"><button class="themebtn" type="button" aria-label="Switch to light mode" title="Light / dark mode"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg></button><a class="btn sm ghost" href="ar.html" lang="ar">عربي</a><a class="btn sm" href="book.html">Book Now</a><button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="drawer"><i></i></button></div>
 </div></header>
 <nav class="drawer" id="drawer" aria-label="Mobile">{dr}</nav>'''
 
@@ -61,7 +61,7 @@ def footer():
 <p style="margin-top:14px"><a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a></p></div>
 <div><h4>Explore</h4><ul><li><a href="price-list.html">Price List</a></li><li><a href="packages.html">Packages</a></li><li><a href="bridal.html">Bridal</a></li><li><a href="gift-vouchers.html">Gift Vouchers</a></li><li><a href="meet-our-therapists.html">Our Therapists</a></li><li><a href="areas-we-serve.html">Areas We Serve</a></li><li><a href="reviews.html">Reviews</a></li><li><a href="faqs.html">FAQs</a></li><li><a href="about.html">About</a></li></ul></div>
 <div><h4>Services</h4><ul>{svc}<li><a href="book.html">Book a Treatment</a></li></ul></div>
-<div><h4>Contact</h4><ul><li>Mobile service across Dubai</li><li>Open {HOURS}</li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="tel:+{PHONE}">{PHONE_DISPLAY}</a></li><li><a href="{WA_HELLO}" target="_blank" rel="noopener">Chat on WhatsApp</a></li></ul></div>
+<div><h4>Contact</h4><ul><li>Mobile service across Dubai</li><li>Open {HOURS}</li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="tel:+{PHONE}">{PHONE_DISPLAY}</a></li><li><a href="tel:+{PHONE2}">{PHONE2_DISPLAY}</a></li><li><a href="{WA_HELLO}" target="_blank" rel="noopener">Chat on WhatsApp</a></li></ul></div>
 </div>
 <div class="fine"><span>© 2026 Sahara Balinese Spa &amp; Salon · Dubai, UAE</span><span><a href="terms-conditions.html">Terms &amp; Cancellation</a> · <a href="privacy-policy.html">Privacy</a></span></div>
 </div></footer>
@@ -85,7 +85,7 @@ def page(fname, title, desc, body, active="", schema=None, hero_img=None, extra_
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
-<script>document.documentElement.classList.remove('nojs')</script>
+<script>document.documentElement.classList.remove('nojs');try{{var t=localStorage.getItem('sahara-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light')}}catch(e){{}}</script>
 {sch}{extra_head}
 </head>
 <body>

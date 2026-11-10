@@ -228,3 +228,49 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold);outline:0}
 .split>*,.stickyside,.vcard{min-width:0;max-width:100%}
 .vcard .what,.vcard .msg,.vcard .for,.vcard .occ{overflow-wrap:anywhere}
 @media(max-width:860px){.stickyside{position:static}.vcard{padding:28px 18px}.vcard .what{font-size:26px}}
+
+/* ---- therapist / leadership photos ---- */
+.thc .ph{padding:0;overflow:hidden;aspect-ratio:4/5;background:var(--bg3)}
+.thc .ph img{width:100%;height:100%;object-fit:cover;object-position:center top}
+
+/* ---- theme switch ---- */
+.themebtn{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:transparent;border:1px solid var(--line2);color:var(--gold);transition:background .25s,border-color .25s}
+.themebtn:hover{background:rgba(219,168,60,.1);border-color:var(--gold)}
+.themebtn svg{width:20px;height:20px}
+.themebtn .i-sun{display:block}.themebtn .i-moon{display:none}
+[data-theme="light"] .themebtn .i-sun{display:none}[data-theme="light"] .themebtn .i-moon{display:block}
+@media(max-width:1100px){.themebtn{width:40px;height:40px}}
+
+/* ---- light mode (white & black, gold accents) ---- */
+[data-theme="light"]{
+  --bg:#FFFFFF;--bg2:#F6F2EA;--bg3:#EFE8DA;--gold:#8E6A1B;--gold2:#6F5012;--cream:#111111;--amber:#3B3326;--muted:#6B5D45;--faint:#8A7B5F;
+  --line:rgba(17,17,17,.14);--line2:rgba(142,106,27,.45);
+}
+[data-theme="light"] body{background:var(--bg)}
+[data-theme="light"] .btn{color:#fff}
+[data-theme="light"] .btn:hover{color:#fff}
+[data-theme="light"] .btn.ghost{color:var(--gold);background:transparent}
+[data-theme="light"] .btn.ghost:hover{background:rgba(142,106,27,.08);color:var(--gold2)}
+[data-theme="light"] .btn.wa{color:#04210f}
+[data-theme="light"] .hdr{background:rgba(255,255,255,.92)}
+[data-theme="light"] .drawer{background:#fff}
+[data-theme="light"] .ftr{background:#111;color:#d9cfb8}
+[data-theme="light"] .ftr h4,[data-theme="light"] .ftr .brand b{color:#FFF4E2}
+[data-theme="light"] .ftr a{color:#DBA83C}
+[data-theme="light"] .skip{color:#fff}
+[data-theme="light"] .trust{background:var(--bg2)}
+[data-theme="light"] .vcard{background:linear-gradient(135deg,#1a1006,#0A0602 60%);color:#C4A882}
+[data-theme="light"] .vcard .occ,[data-theme="light"] .vcard .for{color:#DBA83C}
+[data-theme="light"] .vcard .what{color:#FFF4E2}
+[data-theme="light"] .est,[data-theme="light"] .panel,[data-theme="light"] .card,[data-theme="light"] .note{background:#fff}
+[data-theme="light"] .sec.alt .card,[data-theme="light"] .sec.alt .panel{background:#fff}
+[data-theme="light"] input,[data-theme="light"] select,[data-theme="light"] textarea{background:#fff;color:#111;border-color:rgba(17,17,17,.25)}
+[data-theme="light"] #goldDustAmbient{opacity:.35}
+.themebtn,.hdr,.drawer{transition:background .3s,color .3s}
+
+/* light mode: photographic hero + badge keep the dark look for legibility */
+[data-theme="light"] .hero{--bg:#0A0602;--bg2:#120b04;--gold:#DBA83C;--gold2:#F0CB6A;--cream:#FFF4E2;--amber:#C4A882;--line:rgba(219,168,60,.18);--line2:rgba(219,168,60,.34)}
+[data-theme="light"] .hero .btn:not(.ghost){color:#0A0602}
+[data-theme="light"] .hero .btn.ghost{color:#DBA83C}
+[data-theme="light"] .rp-badge{background:#0A0602!important;border-color:rgba(219,168,60,.4)!important}
+[data-theme="light"] .mbar .b{background:#111;color:#F0CB6A}

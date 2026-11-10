@@ -1,5 +1,4 @@
 import sys, os
-sys.path.insert(0,'/tmp/build/gen')
 from lib import *
 import pages1 as p1, pages2 as p2
 import os as _o; OUT=_o.path.abspath(_o.path.join(_o.path.dirname(__file__),'..'))

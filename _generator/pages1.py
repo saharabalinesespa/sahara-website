@@ -14,9 +14,9 @@ def home():
 <div class="wrap"><span class="eyebrow">Est. Bali · Practised in Dubai</span>
 <h1>Balinese spa, <em>brought to your door.</em></h1>
 <p class="lead">Certified Balinese therapists, luxury ritual products and in-room treatments at your home, hotel or villa across Dubai.</p>
-<p class="price">Massage from <b>AED 200</b> · Facials from <b>AED 280</b> · Travel included</p>
+<p class="price">Massage from <b>AED 250</b> · Facials from <b>AED 200</b> · Travel included</p>
 <div class="btns"><a class="btn" href="book.html">Book a Treatment</a><a class="btn ghost" href="price-list.html">View Price List</a></div></div><div class="scrollcue" aria-hidden="true"></div></section>
-<section class="trust"><div class="wrap"><ul><li><b>20+</b><span>Years of experience</span></li><li><b>15+</b><span>Certified therapists</span></li><li><b>9 AM–11 PM</b><span>Open 7 days</span></li><li><b>Same-day</b><span>Bookings accepted</span></li></ul></div></section>
+<section class="trust"><div class="wrap"><ul><li><b>20+</b><span>Years of experience</span></li><li><b>8</b><span>Balinese therapists</span></li><li><b>10 AM–12 AM</b><span>Open 7 days</span></li><li><b>Same-day</b><span>Bookings accepted</span></li></ul></div></section>
 
 <section class="sec"><div class="wrap split">
 <div class="rv"><span class="eyebrow">About Us</span><h2 style="margin:18px 0 20px">Rooted in Bali. <em>Refined in Dubai.</em></h2>
@@ -26,7 +26,7 @@ def home():
 <div class="btns"><a class="btn ghost" href="about.html">Our Story</a><a class="btn ghost" href="meet-our-therapists.html">Meet the Therapists</a></div></div>
 <div class="photo tall rv"><img src="assets/img/spa-massage-2.webp" alt="Therapist giving a shoulder massage with Balinese oil" loading="lazy"></div></div></section>
 
-<section class="sec alt"><div class="wrap"><div class="sechead center rv"><span class="eyebrow">Our Services</span><h2>The complete <em>Sahara menu</em></h2><p>Massage, facials, body rituals, hair, nails and waxing — all delivered to you.</p></div>
+<section class="sec alt"><div class="wrap"><div class="sechead center rv"><span class="eyebrow">Our Services</span><h2>The complete <em>Sahara menu</em></h2><p>Massage, facials, body scrubs, nails and corporate wellness — all delivered to you.</p></div>
 <div class="grid g3">{cat_cards}</div></div></section>
 
 <section class="sec"><div class="wrap"><div class="sechead center rv"><span class="eyebrow">The Sahara Ritual</span><h2>The Ritual, <em>unfolded.</em></h2><p>In Bali, healing is not a service. It is a sequence — pressure, warmth, oil, breath — kept within families and taught by touch.</p></div>
@@ -47,19 +47,19 @@ def home():
 
 <section class="sec alt"><div class="wrap"><div class="sechead center rv"><span class="eyebrow">Good to know</span><h2>Frequently asked <em>questions</em></h2></div><div class="rv" style="max-width:860px;margin:0 auto">{faq_html(FAQS[:5])}<div class="btns" style="justify-content:center"><a class="btn ghost" href="faqs.html">All FAQs</a></div></div></div></section>
 {cta_band("Reserve your Sahara treatment.","A message is all it takes. Book on WhatsApp or choose your treatment online.")}'''
-    dayspa={"@context":"https://schema.org","@type":"DaySpa","name":"Sahara Balinese Spa & Salon","description":"Balinese spa and salon treatments delivered to your home, hotel or villa in Dubai.","url":BASE+"/","telephone":"+"+PHONE,"email":EMAIL,"areaServed":{"@type":"City","name":"Dubai"},"address":{"@type":"PostalAddress","addressLocality":"Dubai","addressCountry":"AE"},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"09:00","closes":"23:00"},"sameAs":[INSTAGRAM]}
-    return page("index.html","Home Spa & Massage in Dubai | Sahara Balinese Spa & Salon","Balinese massage, facials, body rituals, hair and nails at your home, hotel or villa across Dubai. Certified therapists, travel included, open 9 AM–11 PM.",body,"index",[dayspa])
+    dayspa={"@context":"https://schema.org","@type":"DaySpa","name":"Sahara Balinese Spa & Salon","description":"Balinese spa and salon treatments delivered to your home, hotel or villa in Dubai.","url":BASE+"/","telephone":"+"+PHONE,"email":EMAIL,"areaServed":{"@type":"City","name":"Dubai"},"address":{"@type":"PostalAddress","addressLocality":"Dubai","addressCountry":"AE"},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"10:00","closes":"00:00"},"sameAs":[INSTAGRAM]}
+    return page("index.html","Home Spa & Massage in Dubai | Sahara Balinese Spa & Salon","Balinese massage, facials, body scrubs and nails at your home, hotel or villa across Dubai. Certified therapists, travel included, open 10 AM–12 AM.",body,"index",[dayspa])
 
 def price_list():
     chips="".join(f'<a class="chip" href="#{c}">{esc(CATS[c][0])}</a>' for c in CATS)
     groups=""
     for c in CATS:
         groups+=f'<section class="pgroup" id="{c}"><h2>{esc(CATS[c][0])}</h2><p>{esc(CATS[c][1])}</p>{price_rows(c)}</section>'
-    body=pagehero("Price List",'Home spa prices <em>in Dubai</em>',"All prices include therapist travel within Dubai. Minimum booking value AED 250.",crumbs(("Price List",None)))+f'''
+    body=pagehero("Price List",'Home spa prices <em>in Dubai</em>',"All prices include therapist travel within Dubai. Minimum booking value AED 200.",crumbs(("Price List",None)))+f'''
 <section class="sec" style="padding-top:40px"><div class="wrap"><div class="ptabs" role="navigation" aria-label="Price categories">{chips}</div>{groups}
 <div class="note"><b style="color:var(--cream)">Pricing note.</b> All prices are inclusive of therapist travel to your location within Dubai. A minimum order of AED {MIN_ORDER} applies per booking. Prices shown are indicative and may vary based on location and session requirements — please confirm final pricing at booking. Contact us for custom group or event packages.</div>
 <div class="btns"><a class="btn" href="book.html">Book a Treatment</a><a class="btn ghost" href="packages.html">Signature Packages</a><a class="btn ghost" href="gift-vouchers.html">Gift Vouchers</a></div></div></section>'''
-    return page("price-list.html","Price List | Home Spa & Massage Dubai | Sahara Balinese Spa","Sahara Balinese Spa price list: massage from AED 200, facials from AED 280, body rituals, hair, nails and waxing. Travel within Dubai included.",body,"price-list",[crumb_schema("price-list.html",("Price List",None))])
+    return page("price-list.html","Price List | Home Spa & Massage Dubai | Sahara Balinese Spa","Sahara Balinese Spa price list: massage from AED 250, facials from AED 200, body scrubs, nails and corporate wellness. Travel within Dubai included.",body,"price-list",[crumb_schema("price-list.html",("Price List",None))])
 
 def services():
     cards=""
@@ -70,7 +70,7 @@ def services():
     body=pagehero("Services",'Our <em>services</em>',"The complete Sahara menu — all prices inclusive, all services mobile.",crumbs(("Services",None)))+f'''
 <section class="sec"><div class="wrap"><div class="grid g3">{cards}</div></div></section>
 <section class="sec alt"><div class="wrap"><div class="sechead rv"><span class="eyebrow">Massage Therapy</span><h2>Massage <em>treatments</em></h2></div><div class="grid g3">{mcards}</div></div></section>{cta_band()}'''
-    return page("services.html","Services | Balinese Massage, Facials, Body, Hair & Nails | Sahara Dubai","Explore Sahara's home spa menu in Dubai: Balinese, deep tissue, hot stone and Thai massage, facials, body rituals, hair styling, nails and waxing.",body,"services",[crumb_schema("services.html",("Services",None))])
+    return page("services.html","Services | Balinese Massage, Facials, Body Scrub & Nails | Sahara Dubai","Explore Sahara's home spa menu in Dubai: Balinese, deep tissue, hot stone and Thai massage, facials, body scrubs, nails and corporate wellness.",body,"services",[crumb_schema("services.html",("Services",None))])
 
 def category(c):
     name,desc,slug=CATS[c]
@@ -79,7 +79,6 @@ def category(c):
         extra=f'<div class="grid g3" style="margin-bottom:56px">'+"".join(f'<a class="card link rv" href="{SLUG[i[0]]}.html"><h3 style="font-size:21px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from">{esc(price_label(i))}</span><span class="more">Learn more →</span></a>' for i in items("massage"))+'</div>'
     else:
         extra=price_rows(c)
-    if c=="hair": extra+='<p class="note">Hair prices are “from” prices and vary by length, colour and style. Bridal hair is quoted after your trial — <a href="bridal.html">see bridal packages</a>.</p>'
     if c=="massage": extra+=price_rows(c)
     body=pagehero(name,f'{esc(name)} <em>at home in Dubai</em>',desc,crumbs(("Services","services.html"),(name,None)))+f'<section class="sec" style="padding-top:48px"><div class="wrap">{extra}<div class="btns"><a class="btn" href="book.html">Book a Treatment</a><a class="btn ghost" href="price-list.html">Full Price List</a></div></div></section>{cta_band()}'
     return page(f"{slug}.html",f"{name} at Home in Dubai | Sahara Balinese Spa",f"{desc} Travel included across Dubai.",body,"services",[crumb_schema(f"{slug}.html",("Services","services.html"),(name,None))])
@@ -90,7 +89,7 @@ def treatment(it):
     best="".join(f"<li>{esc(b)}</li>" for b in t["best"])
     others=[i for i in items("massage") if i[0]!=id_][:3]
     rel="".join(f'<a class="card link rv" href="{SLUG[i[0]]}.html"><h3 style="font-size:20px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from">{esc(price_label(i))}</span></a>' for i in others)
-    imgs={"balinese":"spa-massage-2.webp","aromatherapy":"spa-massage-1.webp","hot-stone":"image8.webp"}
+    imgs={"balinese":"spa-massage-2.webp","swedish":"spa-massage-1.webp","hot-stone":"image8.webp","couple":"image6.webp","four-hands":"image10.webp"}
     img=imgs.get(id_,"spa-massage-2.webp")
     note="<p class=\"note\">Pregnant, injured or managing a medical condition? Tell us before you book so we can tailor the treatment or advise if it isn’t suitable.</p>"
     faq=t["faq"]+[("What do you bring?","Everything: a professional massage table, fresh linens and towels, and Balinese oils. You only need a clear space of about 2 m × 2 m."),("Can I request a specific therapist?","Yes — mention your preferred therapist when booking and we will try to send her, subject to availability.")]
@@ -106,7 +105,7 @@ def treatment(it):
     return page(f"{slug}.html",f"{it[1]} at Home in Dubai | From AED {frm(it)} | Sahara",f"{it[1]} at home in Dubai by certified Balinese therapists. From AED {frm(it)}, travel included. Book on WhatsApp or online.",body,"services",[crumb_schema(f"{slug}.html",("Services","services.html"),(it[1],None)),svc,faq_schema(faq)])
 
 def book():
-    goals=[("Relax & unwind","balinese,aromatherapy,reflexology","Balinese and Aromatherapy are our calming, full-body favourites."),("Muscle pain & tension","deep-tissue,hot-stone,cupping,sports","Firmer treatments for knots, stiffness and recovery."),("I'm pregnant","prenatal","Prenatal massage is available after 12 weeks."),("Glow & skin","classic-facial,hydration-facial,brightening-facial,anti-ageing-facial","Facials tailored to your skin type."),("Body renewal","body-scrub,body-wrap,detox-ritual,anti-cellulite","Scrubs, wraps and rituals to exfoliate and nourish."),("Nails & hair","gel-manicure,mani-pedi,blow-dry,updo","Polish and styling, wherever you are.")]
+    goals=[("Relax & unwind","balinese,swedish,reflexology,ayurvedic","Balinese and Swedish are our calming, full-body favourites."),("Muscle pain & tension","deep-tissue,hot-stone,cupping,sports","Firmer treatments for knots, stiffness and recovery."),("Pregnancy & new mums","prenatal,postnatal","Gentle, supportive massage before and after birth."),("Glow & skin","rejuvenating-facial,express-facial","Facials tailored to your skin."),("Body renewal","body-scrub,express-body-scrub","Scrubs to exfoliate and refresh."),("Nails & more","manicure,pedicure,mani-pedi,couple,four-hands","Polish, plus treatments for two.")]
     gb="".join(f'<button type="button" class="chip" data-goal="{g[1]}" data-note="{esc(g[2])}">{esc(g[0])}</button>' for g in goals)
     body=pagehero("Book",'Book a treatment <em>at home</em>',"Choose your treatment, pick a time and send your request on WhatsApp. We confirm personally.",crumbs(("Book",None)))+f'''
 <section class="sec" style="padding-top:48px"><div class="wrap" id="booking" style="max-width:960px">
@@ -119,7 +118,7 @@ def book():
 <div id="grp-wrap" class="hide"><label for="grp">Number of guests</label><input id="grp" type="number" min="3" max="20" value="3" inputmode="numeric"></div>
 <p class="lab">Duration</p><div class="opts" id="dur-opts"></div>
 <p style="font-size:13.5px;margin-top:16px">Couples and groups are an estimate (price × guests). See <a href="packages.html">Couples Sanctuary</a> for the package rate. Final price confirmed on WhatsApp.</p></div>
-<div class="panel"><h2><span class="stn">3</span>Date &amp; time</h2><p class="sub">Same-day bookings accepted. Last appointment 10 PM.</p>
+<div class="panel"><h2><span class="stn">3</span>Date &amp; time</h2><p class="sub">Same-day bookings accepted. Open 10 AM – 12 AM.</p>
 <div class="frow"><div><label for="date">Date</label><input id="date" type="date"></div><div><label for="time">Preferred start time</label><select id="time"></select></div></div></div>
 <div class="panel"><h2><span class="stn">4</span>Your details</h2><p class="sub">&nbsp;</p>
 <div class="frow"><div><label for="fn">First name</label><input id="fn" autocomplete="given-name"></div><div><label for="ln">Last name</label><input id="ln" autocomplete="family-name"></div></div>
@@ -135,4 +134,4 @@ def book():
 </form>
 <p style="font-size:14px;margin-top:22px">Prefer to book instantly? <a href="{FRESHA}" target="_blank" rel="noopener">Book on Fresha</a> · Cancellation: 3 hours’ notice — see <a href="terms-conditions.html">terms</a>.</p>
 </div></section>'''
-    return page("book.html","Book a Home Spa Treatment in Dubai | Sahara Balinese Spa","Book Balinese massage, facials, body rituals, hair and nails at home in Dubai. Choose your treatment and time; we confirm on WhatsApp.",body,"book",[crumb_schema("book.html",("Book",None))])
+    return page("book.html","Book a Home Spa Treatment in Dubai | Sahara Balinese Spa","Book Balinese massage, facials, body scrubs and nails at home in Dubai. Choose your treatment and time; we confirm on WhatsApp.",body,"book",[crumb_schema("book.html",("Book",None))])
