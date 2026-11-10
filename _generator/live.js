@@ -64,15 +64,14 @@
       }).catch(function () {});
       if (!dateEl.value) return;
       var my = ++last; var qs = 'date=' + dateEl.value + '&options=' + x.opt.id + '&guests=' + x.guests; var st = $('#wstaff').value; if (st) qs += '&staff=' + st;
-      timeSel.disabled = true;
-      api('GET', '/api/public/availability?' + qs).then(function (r) {
+            api('GET', '/api/public/availability?' + qs).then(function (r) {
         if (my !== last) return; var prev = timeSel.value;
-        timeSel.innerHTML = r.slots.length ? '<option value="">Choose a time</option>' + r.slots.map(function (s) { return '<option value="' + s.time + '">' + t12(s.time) + '</option>'; }).join('') : '<option value="">No times free on this date</option>';
-        if (prev) timeSel.value = prev;
-      }).catch(function () { timeSel.innerHTML = '<option value="">Could not load times</option>'; }).then(function () { timeSel.disabled = false; });
+        var html = r.slots.length ? '<option value="">Choose a time</option>' + r.slots.map(function (s) { return '<option value="' + s.time + '">' + t12(s.time) + '</option>'; }).join('') : '<option value="">No times free on this date</option>';
+        if (timeSel.dataset.h !== html) { timeSel.dataset.h = html; timeSel.innerHTML = html; if (prev) timeSel.value = prev; }
+      }).catch(function () { timeSel.innerHTML = '<option value="">Could not load times</option>'; });
     }
     var tmr; var soon = function () { clearTimeout(tmr); tmr = setTimeout(refresh, 60); };
-    document.addEventListener('click', function (e) { if (e.target.closest('#booking')) soon(); }, true);
+    document.addEventListener('click', function (e) { if (e.target.closest('#booking') && e.target.closest('.opt,[data-g],.stepper,button') && !e.target.closest('select,input')) soon(); }, true);
     dateEl.addEventListener('change', soon); dateEl.addEventListener('input', soon); $('#grp').addEventListener('input', soon); $('#wstaff').addEventListener('change', soon);
     timeSel.innerHTML = '<option value="">Choose a date first</option>';
     soon();
