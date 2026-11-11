@@ -7,6 +7,8 @@ EMAIL = "saharabalinesespa@gmail.com"
 FRESHA = "https://www.fresha.com/book-now/palma-spa-ru273iq3/all-offer?id=31958&pId=29721"
 INSTAGRAM = "https://www.instagram.com/saharabalinesehomespa/"
 FACEBOOK = "https://www.facebook.com/saharabalinesespa"
+TIKTOK = "https://www.tiktok.com/@saharabalinesehomespa"
+GOOGLE_REVIEW = "https://g.page/r/CYgduMaDQaJUEAI/review"
 import os as _os
 API_BASE = _os.environ.get("SAHARA_API", "").rstrip("/")   # set at build time to switch on live booking (see backend README)
 BASE = "https://saharabalinesespas.com"   # change when custom domain is attached

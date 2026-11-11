@@ -58,7 +58,7 @@ def footer():
 <div class="fcols">
 <div><a class="brand" href="index.html"><img src="assets/img/logo-mark.webp" alt="" width="38" height="44"><span><b>SAHARA BALINESE</b><small>SPA &amp; SALON · DUBAI</small></span></a>
 <p style="font-size:14.5px;max-width:300px">Balinese spa &amp; salon treatments delivered to your home, hotel or villa across Dubai.</p>
-<p style="margin-top:14px"><a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a> · <a href="{FACEBOOK}" target="_blank" rel="noopener">Facebook</a></p></div>
+<p style="margin-top:14px"><a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a> · <a href="{FACEBOOK}" target="_blank" rel="noopener">Facebook</a> · <a href="{GOOGLE_REVIEW}" target="_blank" rel="noopener" data-track="review_click">★ Review us on Google</a></p></div>
 <div><h4>Explore</h4><ul><li><a href="price-list.html">Price List</a></li><li><a href="packages.html">Packages</a></li><li><a href="bridal.html">Bridal</a></li><li><a href="gift-vouchers.html">Gift Vouchers</a></li><li><a href="meet-our-therapists.html">Our Therapists</a></li><li><a href="areas-we-serve.html">Areas We Serve</a></li><li><a href="reviews.html">Reviews</a></li><li><a href="faqs.html">FAQs</a></li><li><a href="about.html">About</a></li></ul></div>
 <div><h4>Services</h4><ul>{svc}<li><a href="book.html">Book a Treatment</a></li></ul></div>
 <div><h4>Contact</h4><ul><li>Mobile service across Dubai</li><li>Open {HOURS}</li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="tel:+{PHONE}">{PHONE_DISPLAY}</a></li><li><a href="tel:+{PHONE2}">{PHONE2_DISPLAY}</a></li><li><a href="{WA_HELLO}" target="_blank" rel="noopener">Chat on WhatsApp</a></li></ul></div>
@@ -69,8 +69,16 @@ def footer():
 <a class="wafab" href="{WA_HELLO}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">{WA_SVG}</a>
 {BADGE}'''
 
+GA4_ID="G-HD07N96RGX"; GTM_ID="GTM-W9GSDCS7"
+TRACK_HEAD=f"""<script async src="https://www.googletagmanager.com/gtag/js?id={GA4_ID}"></script>
+<script src="assets/js/analytics.js"></script>
+<script>(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}})(window,document,'script','dataLayer','{GTM_ID}');</script>
+"""
+TRACK_BODY=f'<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>'
+
 def page(fname, title, desc, body, active="", schema=None, hero_img=None, extra_head=""):
     LIVE=(f'<script>window.SAHARA_API="{API_BASE}"</script>\n<script src="assets/js/live.js" defer></script>\n' if API_BASE else "")
+    SYNC=(f'<script>window.SAHARA_API="{API_BASE}"</script>\n<script src="assets/js/menu-sync.js"></script>\n' if API_BASE else "")
     canon=f"{BASE}/{'' if fname=='index.html' else fname}"
     sch="".join(f'<script type="application/ld+json">{json.dumps(s,ensure_ascii=False)}</script>' for s in (schema or []))
     return f'''<!DOCTYPE html>
@@ -82,7 +90,7 @@ def page(fname, title, desc, body, active="", schema=None, hero_img=None, extra_
 <link rel="canonical" href="{canon}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Sahara Balinese Spa &amp; Salon"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{canon}"><meta property="og:image" content="{BASE}/assets/img/spa-massage-1.webp">
 <meta name="theme-color" content="#0A0602">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+{TRACK_HEAD}<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
@@ -90,13 +98,14 @@ def page(fname, title, desc, body, active="", schema=None, hero_img=None, extra_
 {sch}{extra_head}
 </head>
 <body>
+{TRACK_BODY}
 {header(active)}
 <main id="main">
 {body}
 </main>
 {footer()}
 <script src="assets/js/data.js"></script>
-<script src="assets/js/site.js"></script>
+{SYNC}<script src="assets/js/site.js"></script>
 {LIVE}<script src="assets/js/gold-dust.js" defer></script>
 </body>
 </html>
@@ -120,6 +129,9 @@ def pagehero(eyebrow,h1,lead,crumb_html=""):
 def cta_band(h="Ready when you are.",p="Choose your treatment and we confirm personally on WhatsApp.",extra=""):
     return f'''<section class="sec band"><div class="wrap rv"><span class="eyebrow">Book</span><h2 style="margin:18px 0 12px">{h}</h2><p style="max-width:520px;margin:0 auto">{p}</p><div class="btns"><a class="btn" href="book.html">Book a Treatment</a><a class="btn wa" href="{WA_HELLO}" target="_blank" rel="noopener">WhatsApp Us</a></div>{extra}</div></section>'''
 
+def review_band(h="Loved your Sahara experience?", p="Your Google review helps other families and professionals in Dubai find a trusted home spa. It takes under a minute."):
+    return f'''<section class="sec"><div class="wrap center"><div class="rv panel" style="max-width:680px;margin:0 auto;text-align:center"><div aria-hidden="true" style="color:var(--gold);font-size:24px;letter-spacing:6px">★★★★★</div><h2 style="margin:12px 0 10px;font-size:clamp(24px,4vw,32px)">{h}</h2><p style="max-width:520px;margin:0 auto">{p}</p><div class="btns"><a class="btn" href="{GOOGLE_REVIEW}" target="_blank" rel="noopener" data-track="review_click">Leave a Google review</a></div></div></div></section>'''
+
 def faq_html(faqs, schema_out=None):
     rows="".join(f'<details><summary>{esc(q)}</summary><div class="ans"><p>{esc(a)}</p></div></details>' for q,a in faqs)
     return f'<div class="acc">{rows}</div>'
@@ -131,9 +143,9 @@ def price_rows(cat, with_book=True):
     for it in items(cat):
         d=dur_label(it)
         rows+=f'<tr><td class="n"><b>{esc(it[1])}</b><span>{esc(it[2])}</span></td><td>{esc(d) if d else "—"}</td><td class="p">{esc(price_label(it))}</td><td class="b"><a class="btn sm ghost" href="book.html?treatment={it[0]}">Book</a></td></tr>'
-    return f'<table class="ptable"><thead><tr><th>Treatment</th><th>Duration</th><th>Price</th><th></th></tr></thead><tbody>{rows}</tbody></table>'
+    return f'<table class="ptable" data-menu-cat="{cat}"><thead><tr><th>Treatment</th><th>Duration</th><th>Price</th><th></th></tr></thead><tbody>{rows}</tbody></table>'
 
 def data_js():
-    d={"phone":PHONE,"minOrder":MIN_ORDER,"cats":{c:{"name":CATS[c][0]} for c in CATS},
+    d={"slug":SLUG,"phone":PHONE,"minOrder":MIN_ORDER,"cats":{c:{"name":CATS[c][0]} for c in CATS},
        "items":[{"id":i[0],"name":i[1],"blurb":i[2],"opts":[list(o) for o in i[3]],"cat":i[4]} for i in ITEMS]}
     return "window.SAHARA="+json.dumps(d,ensure_ascii=False)+";"

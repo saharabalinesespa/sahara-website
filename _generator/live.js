@@ -89,7 +89,7 @@
       err.textContent = ''; busy = true; btn.disabled = true; btn.textContent = 'Booking…';
       api('POST', '/api/public/book', { date: dateEl.value, time: v('time'), options: [x.opt.id], guests: x.guests, name: (v('fn') + ' ' + v('ln')).trim(), phone: v('wnum'), email: v('wemail'),
         building: v('bldg'), unit: v('apt'), map_link: v('pin'), notes: [v('notes'), v('heard') ? 'Heard about us: ' + v('heard') : ''].filter(Boolean).join(' | '), staff_id: v('wstaff') || undefined, website: '' })
-        .then(function (r) { location.href = r.pay_url ? r.pay_url : 'booking-confirmed.html?status=' + encodeURIComponent(r.status) + '&t=' + encodeURIComponent(r.token); })
+        .then(function (r) { window.sahTrack && window.sahTrack('booking_submitted', { value: x.opt.price / 100 * x.guests, currency: 'AED', service: x.s.name }); location.href = r.pay_url ? r.pay_url : 'booking-confirmed.html?status=' + encodeURIComponent(r.status) + '&t=' + encodeURIComponent(r.token); })
         .catch(function (ex) { err.textContent = ex.message; if (ex.status === 409) refresh(); busy = false; btn.disabled = false; btn.textContent = 'Confirm booking'; });
     }, true);
   }
@@ -119,6 +119,13 @@
   }
 
   /* ---------------- confirmation + manage pages ---------------- */
+  var REVIEW = 'https://g.page/r/CYgduMaDQaJUEAI/review';
+  function reviewPanel(done) {
+    return '<div class="panel" style="margin-top:16px"><div aria-hidden="true" style="color:var(--gold);font-size:22px;letter-spacing:5px">★★★★★</div><h3 class="st" style="margin-top:6px">' + (done ? 'How was your treatment?' : 'After your treatment') + '</h3><p>' +
+      (done ? 'Thank you for choosing Sahara. Your Google review takes under a minute and helps others find us.' : 'We would be grateful for 30 seconds of your time — a Google review helps other families and professionals in Dubai find a trusted home spa.') +
+      '</p><div class="btns"><a class="btn" href="' + REVIEW + '" target="_blank" rel="noopener" data-track="review_click">Leave a Google review</a></div></div>';
+  }
+  function once(key, fn) { try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch (e) {} fn(); }
   function apptHtml(a) {
     return '<div class="panel"><h2 style="margin-bottom:14px">' + esc(a.ref) + ' <span class="pill" style="font-size:12px;border:1px solid var(--gold);padding:2px 10px;border-radius:99px">' + esc(a.status.replace('_', ' ')) + '</span></h2>' +
       '<p><b>' + esc(niceDate(a.starts_at)) + '</b> at <b>' + t12(a.starts_at.slice(11)) + '</b></p>' +
@@ -138,6 +145,7 @@
     api('GET', '/api/public/appointment/' + encodeURIComponent(t)).then(function (a) {
       box.innerHTML = '<div class="panel"><h2>' + (a.status === 'pending' ? 'Almost there' : 'You’re booked, ' + esc(a.client_name.split(' ')[0])) + '</h2><p>' + (a.status === 'pending' ? 'We are waiting for your deposit to confirm this booking.' : 'A confirmation has been emailed to you. Our therapist will arrive at the time below.') + '</p></div>' + apptHtml(a) +
         '<div class="btns"><a class="btn" href="booking-manage.html?t=' + encodeURIComponent(t) + '">Manage or cancel</a></div>';
+      if (a.status !== 'pending') { box.innerHTML += reviewPanel(false); once('sah-bk-' + a.ref, function () { window.sahTrack && window.sahTrack('booking_confirmed', { transaction_id: a.ref, value: a.total / 100, currency: 'AED', deposit_paid: !!a.deposit_paid }); }); }
     }).catch(function (ex) { box.innerHTML = '<div class="panel"><p>' + esc(ex.message) + '</p></div>'; });
   }
   function initManage() {
@@ -150,6 +158,7 @@
         if (!p.late && p.refund) msg += ' Your deposit of ' + aed(p.refund) + ' will be refunded.';
         html += '<div class="panel"><h3 class="st">Need to cancel?</h3><p>' + msg + '</p><button class="btn" id="cx">Cancel this booking</button><p class="err" id="cx-err"></p></div><p style="font-size:14px">To change the time, please <a href="contact.html">contact us</a> — we will move it for you.</p>';
       }
+      html += reviewPanel(a.status === 'completed');
       box.innerHTML = html;
       var b = $('#cx'); if (b) b.addEventListener('click', function () {
         if (!confirm('Cancel this booking?')) return; b.disabled = true;

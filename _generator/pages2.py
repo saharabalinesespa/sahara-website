@@ -48,7 +48,7 @@ def vouchers():
 def therapists():
     cards="".join(f'<div class="thc rv"><div class="ph"><img src="assets/img/{ph}" alt="{esc(n)}, Sahara therapist" loading="lazy" width="600" height="750"></div><h3>{esc(n)}</h3><span class="role">{esc(sp)}</span><p style="font-size:14.5px">{esc(d)}</p></div>' for n,sp,d,ph in THERAPISTS)
     body=pagehero("Our Therapists",'Meet our <em>professional therapists</em>',"Experienced Balinese wellness professionals with international exposure across Indonesia, Bali, Turkey and Dubai.",crumbs(("About","about.html"),("Our Therapists",None)))+f'''
-<section class="sec" style="padding-top:48px"><div class="wrap"><p class="rv" style="max-width:760px;margin-bottom:40px">Each therapist brings individual skills, traditional knowledge and a passion for delivering authentic Balinese spa experiences.</p><div class="grid g4">{cards}</div>
+<section class="sec" style="padding-top:48px"><div class="wrap"><p class="rv" style="max-width:760px;margin-bottom:40px">Each therapist brings individual skills, traditional knowledge and a passion for delivering authentic Balinese spa experiences.</p><div class="grid g4" id="th-grid">{cards}</div>
 <div class="note rv"><b style="color:var(--cream)">Who will come to you?</b> We match each booking to the best available therapist for your treatment. Prefer someone in particular? Mention their name when booking and we will try to send them, subject to availability.</div>
 <div class="btns"><a class="btn" href="book.html">Book a Treatment</a><a class="btn wa" href="{WA_HELLO}" target="_blank" rel="noopener">Ask on WhatsApp</a></div></div></section>'''
     return page("meet-our-therapists.html","Meet Our Therapists | Sahara Balinese Spa & Salon Dubai","Meet the Sahara team: experienced Balinese wellness professionals delivering massage, body scrubs and spa rituals at your home in Dubai.",body,"about",[crumb_schema("meet-our-therapists.html",("About","about.html"),("Our Therapists",None))])
@@ -69,8 +69,8 @@ def faqs():
 
 def reviews():
     body=pagehero("Reviews",'What our <em>clients say</em>',"Read and share experiences of Sahara’s home spa service in Dubai.",crumbs(("Reviews",None)))+f'''
-<!-- TODO(owner): add real Google review link and verified client testimonials here. No reviews are invented. -->
-<section class="sec" style="padding-top:48px"><div class="wrap center"><div class="rv" style="max-width:640px;margin:0 auto"><span class="eyebrow">Share your experience</span><h2 style="margin:18px 0 16px">Tried <em>Sahara?</em></h2><p>Your feedback helps other clients choose with confidence. Review us on Fresha, or send us a message — we read every one.</p><div class="btns"><a class="btn" href="{FRESHA}" target="_blank" rel="noopener">Reviews on Fresha</a><a class="btn ghost" href="{WA("Hi%20Sahara%2C%20I%27d%20like%20to%20share%20feedback.")}" target="_blank" rel="noopener">Send Feedback</a></div></div></div></section>{cta_band()}'''
+<!-- Google review link is live; add verified client testimonials here when the owner supplies them. -->
+<section class="sec" style="padding-top:48px"><div class="wrap center"><div class="rv" style="max-width:640px;margin:0 auto"><span class="eyebrow">Share your experience</span><h2 style="margin:18px 0 16px">Tried <em>Sahara?</em></h2><p>Your feedback helps other clients choose with confidence. Review us on Google, or send us a message — we read every one.</p><div class="btns"><a class="btn" href="{GOOGLE_REVIEW}" target="_blank" rel="noopener">Review us on Google</a><a class="btn ghost" href="{WA("Hi%20Sahara%2C%20I%27d%20like%20to%20share%20feedback.")}" target="_blank" rel="noopener">Send Feedback</a></div></div></div></section>{cta_band()}'''
     return page("reviews.html","Reviews | Sahara Balinese Spa & Salon Dubai","Read and share client reviews of Sahara Balinese Spa & Salon, Dubai's mobile Balinese spa.",body,"about",[crumb_schema("reviews.html",("Reviews",None))])
 
 def about():
@@ -89,7 +89,8 @@ def about():
 def contact():
     body=pagehero("Contact",'Book &amp; <em>contact</em>',"Open 10 AM – 12 AM, 7 days a week, across all of Dubai.",crumbs(("Contact",None)))+f'''
 <section class="sec" style="padding-top:48px"><div class="wrap"><div class="grid g3" style="margin-bottom:56px">
-<div class="card rv"><h3>Book on Fresha</h3><p>Real-time slot availability and instant confirmation.</p><a class="btn sm" style="margin-top:18px" href="{FRESHA}" target="_blank" rel="noopener">Open Fresha</a></div>
+<div class="card rv"><h3>Book online</h3><p>Real-time slot availability and instant confirmation.</p><a class="btn sm" style="margin-top:18px" href="book.html">Book now</a></div>
+<div class="card rv"><h3>Review us on Google</h3><p>Had a treatment with us? Your feedback takes under a minute and means a lot.</p><a class="btn sm" style="margin-top:18px" href="{GOOGLE_REVIEW}" target="_blank" rel="noopener" data-track="review_click">Leave a review</a></div>
 <div class="card rv"><h3>WhatsApp us</h3><p>Same-day bookings, group requests or custom packages.</p><a class="btn sm wa" style="margin-top:18px" href="{WA_HELLO}" target="_blank" rel="noopener">Chat Now</a></div>
 <div class="card rv"><h3>Call us</h3><p>Speak directly with our team for recommendations.</p><a class="btn sm ghost" style="margin-top:18px" href="tel:+{PHONE}">{PHONE_DISPLAY}</a> <a class="btn sm ghost" style="margin-top:18px" href="tel:+{PHONE2}">{PHONE2_DISPLAY}</a></div></div>
 <div class="split" style="align-items:start"><form class="panel rv" id="contact-form" novalidate><h2>Make an enquiry</h2>

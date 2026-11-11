@@ -14,7 +14,8 @@ for f in ["packages","bridal","vouchers","therapists","areas","faqs","reviews","
 LIVE_ONLY=[]
 if API_BASE:
     add("booking-confirmed.html",p2.booking_confirmed()); add("booking-manage.html",p2.booking_manage()); LIVE_ONLY=["booking-confirmed.html","booking-manage.html"]
-    import shutil; shutil.copy(os.path.join(os.path.dirname(os.path.abspath(__file__)),"live.js"),os.path.join(OUT,"assets/js/live.js"))
+    import shutil; [shutil.copy(os.path.join(os.path.dirname(os.path.abspath(__file__)),f),os.path.join(OUT,"assets/js/"+f)) for f in ("live.js","menu-sync.js")]
+import shutil as _sh; _sh.copy(os.path.join(os.path.dirname(os.path.abspath(__file__)),'analytics.js'),os.path.join(OUT,'assets/js/analytics.js'))
 for fn,h in pages.items():
     open(os.path.join(OUT,fn),'w',encoding='utf-8').write(h)
 open(os.path.join(OUT,'assets/js/data.js'),'w',encoding='utf-8').write(data_js())

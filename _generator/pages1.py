@@ -4,7 +4,7 @@ def home():
     cat_cards=""
     for c in CATS:
         its=items(c); fr=min(frm(i) for i in its)
-        cat_cards+=f'<a class="card link rv" href="{CATS[c][2]}.html"><h3>{esc(CATS[c][0])}</h3><p>{esc(CATS[c][1])}</p><span class="from">From AED {fr}</span><span class="more">Explore →</span></a>'
+        cat_cards+=f'<a class="card link rv" href="{CATS[c][2]}.html"><h3>{esc(CATS[c][0])}</h3><p>{esc(CATS[c][1])}</p><span class="from" data-from-cat="{c}">From AED {fr}</span><span class="more">Explore →</span></a>'
     pk="".join(f'<div class="card rv"><span class="num">{r}</span><h3>{esc(n)}</h3><p>{esc(t)}</p><span class="from">AED {p} · {esc(d)}</span><a class="more" href="packages.html">View package →</a></div>' for r,n,t,inc,d,p in PACKAGES)
     gal=''.join(f'<div class="photo rv"><img src="assets/img/{f}" alt="{a}" loading="lazy"></div>' for f,a in [("spa-massage-2.webp","Therapist giving a shoulder massage with Balinese oil"),("image6.webp","Two Sahara therapists giving a poolside massage"),("image10.webp","Sahara therapists giving a treatment by the pool"),("image8.webp","Treatment room set up with Balinese textiles"),("spa-massage-1.webp","Relaxing head and ear massage surrounded by tropical plants")])
     ritual=[("Two hours · seven movements","An uninterrupted sequence, opened with a footbath of warm water and flower petals."),("Frangipani-infused coconut oil","Cold-pressed virgin coconut oil, steeped with frangipani and a trace of lemongrass."),("Warmed volcanic basalt","Stones gathered from the island's rivers, warmed to the temperature of resting skin."),("Balinese palm-pressure lineage","Long, unbroken strokes drawn from a technique passed down within healing families."),("One therapist, uninterrupted","A single certified Balinese therapist attends the full two hours. No handovers."),("Jasmine steam finish","Closed with warm towels infused with jasmine, and a moment of stillness.")]
@@ -14,9 +14,9 @@ def home():
 <div class="wrap"><span class="eyebrow">Est. Bali · Practised in Dubai</span>
 <h1>Balinese spa, <em>brought to your door.</em></h1>
 <p class="lead">Certified Balinese therapists, luxury ritual products and in-room treatments at your home, hotel or villa across Dubai.</p>
-<p class="price">Massage from <b>AED 250</b> · Facials from <b>AED 200</b> · Travel included</p>
+<p class="price">Massage from <b data-from-cat="massage">AED 250</b> · Facials from <b data-from-cat="facial" data-bare="1">AED 200</b> · Travel included</p>
 <div class="btns"><a class="btn" href="book.html">Book a Treatment</a><a class="btn ghost" href="price-list.html">View Price List</a></div></div><div class="scrollcue" aria-hidden="true"></div></section>
-<section class="trust"><div class="wrap"><ul><li><b>20+</b><span>Years of experience</span></li><li><b>8</b><span>Balinese therapists</span></li><li><b>10 AM–12 AM</b><span>Open 7 days</span></li><li><b>Same-day</b><span>Bookings accepted</span></li></ul></div></section>
+<section class="trust"><div class="wrap"><ul><li><b>20+</b><span>Years of experience</span></li><li><b data-staff-count="1">8</b><span>Balinese therapists</span></li><li><b>10 AM–12 AM</b><span>Open 7 days</span></li><li><b>Same-day</b><span>Bookings accepted</span></li></ul></div></section>
 
 <section class="sec"><div class="wrap split">
 <div class="rv"><span class="eyebrow">About Us</span><h2 style="margin:18px 0 20px">Rooted in Bali. <em>Refined in Dubai.</em></h2>
@@ -46,8 +46,8 @@ def home():
 <ul class="areas rv">{"".join(f"<li>{esc(a)}</li>" for a in AREAS[:12])}</ul></div></section>
 
 <section class="sec alt"><div class="wrap"><div class="sechead center rv"><span class="eyebrow">Good to know</span><h2>Frequently asked <em>questions</em></h2></div><div class="rv" style="max-width:860px;margin:0 auto">{faq_html(FAQS[:5])}<div class="btns" style="justify-content:center"><a class="btn ghost" href="faqs.html">All FAQs</a></div></div></div></section>
-{cta_band("Reserve your Sahara treatment.","A message is all it takes. Book on WhatsApp or choose your treatment online.")}'''
-    dayspa={"@context":"https://schema.org","@type":"DaySpa","name":"Sahara Balinese Spa & Salon","description":"Balinese spa and salon treatments delivered to your home, hotel or villa in Dubai.","url":BASE+"/","telephone":"+"+PHONE,"email":EMAIL,"areaServed":{"@type":"City","name":"Dubai"},"address":{"@type":"PostalAddress","addressLocality":"Dubai","addressCountry":"AE"},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"10:00","closes":"00:00"},"sameAs":[INSTAGRAM]}
+{review_band()}{cta_band("Reserve your Sahara treatment.","A message is all it takes. Book on WhatsApp or choose your treatment online.")}'''
+    dayspa={"@context":"https://schema.org","@type":"DaySpa","name":"Sahara Balinese Spa & Salon","description":"Balinese spa and salon treatments delivered to your home, hotel or villa in Dubai.","url":BASE+"/","telephone":"+"+PHONE,"email":EMAIL,"areaServed":{"@type":"City","name":"Dubai"},"address":{"@type":"PostalAddress","addressLocality":"Dubai","addressCountry":"AE"},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"10:00","closes":"00:00"},"sameAs":[INSTAGRAM,FACEBOOK,TIKTOK]}
     return page("index.html","Home Spa & Massage in Dubai | Sahara Balinese Spa & Salon","Balinese massage, facials, body scrubs and nails at your home, hotel or villa across Dubai. Certified therapists, travel included, open 10 AM–12 AM.",body,"index",[dayspa])
 
 def price_list():
@@ -65,8 +65,8 @@ def services():
     cards=""
     for c in CATS:
         its=items(c); fr=min(frm(i) for i in its)
-        cards+=f'<a class="card link rv" href="{CATS[c][2]}.html"><h3>{esc(CATS[c][0])}</h3><p>{esc(CATS[c][1])}</p><span class="from">From AED {fr} · {len(its)} treatments</span><span class="more">Explore →</span></a>'
-    mcards="".join(f'<a class="card link rv" href="{SLUG[i[0]]}.html"><h3 style="font-size:21px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from">{esc(price_label(i))}</span></a>' for i in items("massage"))
+        cards+=f'<a class="card link rv" href="{CATS[c][2]}.html"><h3>{esc(CATS[c][0])}</h3><p>{esc(CATS[c][1])}</p><span class="from" data-from-cat="{c}" data-count="1">From AED {fr} · {len(its)} treatments</span><span class="more">Explore →</span></a>'
+    mcards="".join(f'<a class="card link rv" data-svc="{i[0]}" href="{SLUG[i[0]]}.html"><h3 style="font-size:21px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from" data-price-svc="{i[0]}">{esc(price_label(i))}</span></a>' for i in items("massage"))
     body=pagehero("Services",'Our <em>services</em>',"The complete Sahara menu — all prices inclusive, all services mobile.",crumbs(("Services",None)))+f'''
 <section class="sec"><div class="wrap"><div class="grid g3">{cards}</div></div></section>
 <section class="sec alt"><div class="wrap"><div class="sechead rv"><span class="eyebrow">Massage Therapy</span><h2>Massage <em>treatments</em></h2></div><div class="grid g3">{mcards}</div></div></section>{cta_band()}'''
@@ -76,7 +76,7 @@ def category(c):
     name,desc,slug=CATS[c]
     extra=""
     if c=="massage":
-        extra=f'<div class="grid g3" style="margin-bottom:56px">'+"".join(f'<a class="card link rv" href="{SLUG[i[0]]}.html"><h3 style="font-size:21px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from">{esc(price_label(i))}</span><span class="more">Learn more →</span></a>' for i in items("massage"))+'</div>'
+        extra=f'<div class="grid g3" style="margin-bottom:56px">'+"".join(f'<a class="card link rv" data-svc="{i[0]}" href="{SLUG[i[0]]}.html"><h3 style="font-size:21px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from" data-price-svc="{i[0]}">{esc(price_label(i))}</span><span class="more">Learn more →</span></a>' for i in items("massage"))+'</div>'
     else:
         extra=price_rows(c)
     if c=="massage": extra+=price_rows(c)
@@ -88,7 +88,7 @@ def treatment(it):
     rows="".join(f'<tr><td class="n"><b>{o[0]} minutes</b></td><td class="p">AED {o[1]}</td><td class="b"><a class="btn sm ghost" href="book.html?treatment={id_}">Book</a></td></tr>' for o in it[3])
     best="".join(f"<li>{esc(b)}</li>" for b in t["best"])
     others=[i for i in items("massage") if i[0]!=id_][:3]
-    rel="".join(f'<a class="card link rv" href="{SLUG[i[0]]}.html"><h3 style="font-size:20px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from">{esc(price_label(i))}</span></a>' for i in others)
+    rel="".join(f'<a class="card link rv" data-svc="{i[0]}" href="{SLUG[i[0]]}.html"><h3 style="font-size:20px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from" data-price-svc="{i[0]}">{esc(price_label(i))}</span></a>' for i in others)
     imgs={"balinese":"spa-massage-2.webp","swedish":"spa-massage-1.webp","hot-stone":"image8.webp","couple":"image6.webp","four-hands":"image10.webp"}
     img=imgs.get(id_,"spa-massage-2.webp")
     note="<p class=\"note\">Pregnant, injured or managing a medical condition? Tell us before you book so we can tailor the treatment or advise if it isn’t suitable.</p>"
@@ -97,7 +97,7 @@ def treatment(it):
 <section class="sec"><div class="wrap split"><div class="rv"><span class="eyebrow">The treatment</span><h2 style="margin:18px 0 20px">What is <em>{esc(it[1].lower())}?</em></h2><p>{esc(t["what"])}</p><p><b style="color:var(--cream)">Pressure:</b> {esc(t["pressure"])}</p><div class="btns"><a class="btn" href="book.html?treatment={id_}">Book This Treatment</a><a class="btn wa" href="{WA_HELLO}" target="_blank" rel="noopener">WhatsApp</a></div></div>
 <div class="photo tall rv"><img src="assets/img/{img}" alt="Sahara therapist giving a massage treatment" loading="lazy"></div></div></section>
 <section class="sec alt"><div class="wrap split"><div class="rv"><span class="eyebrow">Is it right for you?</span><h2 style="margin:18px 0 20px">Who <em>loves it</em></h2><ul class="ticks">{best}</ul>{note}</div>
-<div class="rv"><span class="eyebrow">Prices</span><h2 style="margin:18px 0 10px">{esc(it[1])} <em>prices</em></h2><table class="ptable"><thead><tr><th>Duration</th><th>Price</th><th></th></tr></thead><tbody>{rows}</tbody></table><p style="font-size:14px;margin-top:14px">Prices include travel within Dubai. Minimum booking value AED {MIN_ORDER}.</p></div></div></section>
+<div class="rv"><span class="eyebrow">Prices</span><h2 style="margin:18px 0 10px">{esc(it[1])} <em>prices</em></h2><table class="ptable"><thead><tr><th>Duration</th><th>Price</th><th></th></tr></thead><tbody data-svc-rows="{id_}">{rows}</tbody></table><p style="font-size:14px;margin-top:14px">Prices include travel within Dubai. Minimum booking value AED {MIN_ORDER}.</p></div></div></section>
 <section class="sec"><div class="wrap split rev"><div class="rv"><span class="eyebrow">Your appointment</span><h2 style="margin:18px 0 26px">What <em>happens</em></h2><ol class="steps"><li><h4>Your therapist arrives</h4><p>She arrives on time with the table, linens, towels and oils, and sets up quietly.</p></li><li><h4>A short consultation</h4><p>Tell her about sensitive areas, health conditions and your preferred pressure.</p></li><li><h4>Your treatment</h4><p>Relax while she works, adapting pressure as she goes.</p></li><li><h4>Aftercare</h4><p>Drink some water and take it easy — no traffic to face.</p></li></ol></div>
 <div class="rv"><span class="eyebrow">Good to know</span><h2 style="margin:18px 0 20px">Frequently asked <em>questions</em></h2>{faq_html(faq)}</div></div></section>
 <section class="sec alt"><div class="wrap"><div class="sechead rv"><span class="eyebrow">You may also like</span><h2>Related <em>treatments</em></h2></div><div class="grid g3">{rel}</div></div></section>{cta_band()}'''

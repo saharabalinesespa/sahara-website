@@ -54,6 +54,7 @@ var bk=$('#booking');
 if(bk){
   var st={id:'',guests:1,group:3,dur:0};
   var optsEl=$('#tx-opts'),durEl=$('#dur-opts'),estT=$('#est-total'),estN=$('#est-note');
+  function buildOpts(){
   var cats=S.cats,html='';
   Object.keys(cats).forEach(function(c){
     html+='<div class="cathead">'+cats[c].name+'</div>';
@@ -62,6 +63,8 @@ if(bk){
     });
   });
   optsEl.innerHTML=html;
+  }
+  buildOpts();
   function render(){
     $$('.opt',optsEl).forEach(function(b){b.classList.toggle('on',b.dataset.id===st.id)});
     var it=st.id?itemById(st.id):null,dh='';
@@ -103,6 +106,7 @@ if(bk){
   var q=new URLSearchParams(location.search).get('treatment');
   if(q&&itemById(q))st.id=q;
   render();
+  (window.sahHooks=window.sahHooks||[]).push(function(){buildOpts();if(st.id&&!itemById(st.id))st.id='';render()});
   $('#bk-form').addEventListener('submit',function(e){
     e.preventDefault();
     var err=$('#bk-err'),it=st.id?itemById(st.id):null;
@@ -138,7 +142,8 @@ var vf=$('#voucher');
 if(vf){
   var vs={kind:'treatment'};
   var tsel=$('#v-tx');
-  tsel.innerHTML=S.items.filter(function(i){return i.cat==='massage'||i.cat==='facial'||i.cat==='body'}).map(function(i){return '<option value="'+i.id+'">'+i.name+'</option>'}).join('');
+  function vlist(){var keep=tsel.value;tsel.innerHTML=S.items.filter(function(i){return i.cat==='massage'||i.cat==='facial'||i.cat==='body'}).map(function(i){return '<option value="'+i.id+'">'+i.name+'</option>'}).join('');if(keep&&itemById(keep))tsel.value=keep}
+  vlist();
   function vdur(){
     var it=itemById(tsel.value),h='';
     it.opts.forEach(function(o,idx){h+='<option value="'+idx+'">'+o[0]+' min — '+aed(o[1])+'</option>'});
@@ -163,6 +168,7 @@ if(vf){
   tsel.addEventListener('change',function(){vdur();vprev()});
   $$('input,select,textarea',vf).forEach(function(el){el.addEventListener('input',vprev);el.addEventListener('change',vprev)});
   vdur();vprev();
+  (window.sahHooks=window.sahHooks||[]).push(function(){vlist();vdur();vprev()});
   $('#v-form').addEventListener('submit',function(e){
     e.preventDefault();
     var v=function(id){return ($('#'+id).value||'').trim()},err=$('#v-err');
