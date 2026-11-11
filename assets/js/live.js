@@ -81,6 +81,7 @@
       e.preventDefault(); e.stopImmediatePropagation();
       if (busy) return;
       var x = sel(), v = function (id) { return ($('#' + id).value || '').trim(); };
+      if (window.sahCheck && window.sahCheck.run(true)) return;
       if (!x || x.missing) { err.textContent = 'Please choose a treatment that can be booked online, or contact us on WhatsApp.'; return; }
       if (!dateEl.value || !v('time')) { err.textContent = 'Please choose a date and an available time.'; return; }
       if (!v('fn') || !v('wnum')) { err.textContent = 'Please add your name and mobile number.'; return; }

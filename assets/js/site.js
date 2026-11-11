@@ -110,6 +110,7 @@ if(bk){
   (window.sahHooks=window.sahHooks||[]).push(function(){buildOpts();if(st.id&&!itemById(st.id))st.id='';render()});
   $('#bk-form').addEventListener('submit',function(e){
     e.preventDefault();
+    if(window.sahCheck&&window.sahCheck.run(true))return;
     var err=$('#bk-err'),it=st.id?itemById(st.id):null;
     var v=function(id){return ($('#'+id).value||'').trim()};
     if(!it){err.textContent='Please choose a treatment.';return}
@@ -214,4 +215,55 @@ if(cf){
     try{localStorage.setItem('sahara-theme',l?'dark':'light')}catch(x){}
     sync()});
   sync();
+})();
+
+/* Booking form: tells the customer exactly what is still missing (summary in the confirm bar, red fields, scroll to the first one). */
+(function(){
+  var form=document.getElementById('bk-form'); if(!form)return;
+  var $=function(s){return document.querySelector(s)};
+  function val(id){var e=document.getElementById(id);return e?(e.value||'').trim():''}
+  function fields(){
+    var live=!!document.getElementById('wemail');
+    var f=[
+      {k:'tx',label:'Treatment',ok:!!$('#tx-opts .opt.on'),el:'#tx-opts',msg:'Please choose a treatment.'},
+      {k:'date',label:'Date',ok:!!val('date'),el:'#date',msg:'Please choose a date.'},
+      {k:'time',label:'Start time',ok:!!val('time'),el:'#time',msg:'Please choose an available start time.'},
+      {k:'fn',label:'First name',ok:!!val('fn'),el:'#fn',msg:'Please enter your first name.'},
+      {k:'wnum',label:'Mobile number',ok:!!val('wnum'),el:'#wnum',msg:'Please enter your mobile / WhatsApp number.'}
+    ];
+    if(live)f.push({k:'wemail',label:'Email',ok:/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('wemail')),el:'#wemail',msg:'Please enter a valid email — your confirmation is sent there.'});
+    f.push({k:'addr',label:'Address or map pin',ok:!!(val('bldg')||val('pin')),el:'#bldg',msg:'Please add your building / villa community, or paste a Google Maps pin.'});
+    return f;
+  }
+  function clearMarks(){
+    Array.prototype.forEach.call(document.querySelectorAll('.fmsg'),function(n){n.parentNode.removeChild(n)});
+    Array.prototype.forEach.call(document.querySelectorAll('.bad'),function(n){n.classList.remove('bad')});
+  }
+  var bar=document.querySelector('.est'),sum=null;
+  if(bar){sum=document.createElement('p');sum.id='bk-missing';sum.className='miss';sum.setAttribute('aria-live','polite');bar.appendChild(sum)}
+  function summary(){
+    if(!sum)return;var m=fields().filter(function(x){return!x.ok});
+    if(!m.length){sum.className='miss okk';sum.textContent='✓ All set — you can confirm your booking.';return}
+    sum.className='miss';sum.textContent='Still needed: '+m.map(function(x){return x.label}).join(' · ');
+  }
+  var shown=false;
+  function run(show,quiet){
+    var f=fields(),m=f.filter(function(x){return!x.ok});clearMarks();summary();
+    if(show)shown=true;
+    var err=document.getElementById('bk-err');
+    if(!m.length){if(err&&/^Please complete/.test(err.textContent))err.textContent='';return 0}
+    if(!show&&!shown)return 0;
+    m.forEach(function(x){
+      var el=$(x.el);if(!el)return;el.classList.add('bad');
+      var p=document.createElement('div');p.className='fmsg';p.textContent=x.msg;el.parentNode.insertBefore(p,el.nextSibling);
+    });
+    if(err)err.textContent='Please complete: '+m.map(function(x){return x.label}).join(', ')+'.';
+    if(!quiet){var first=$(m[0].el);
+      if(first){first.scrollIntoView({behavior:'smooth',block:'center'});if(first.focus&&m[0].k!=='tx')try{first.focus({preventScroll:true})}catch(e){}}}
+    return m.length;
+  }
+  window.sahCheck={run:run,summary:summary};
+  var t=null;function later(){clearTimeout(t);t=setTimeout(function(){run(false,true)},250)}
+  ['input','change','click'].forEach(function(ev){form.addEventListener(ev,later,true)});
+  setTimeout(summary,600);setTimeout(summary,2000);
 })();

@@ -308,3 +308,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold);outline:0}
 .opt .otx{display:block;padding:14px 16px 16px}
 .opt .otx b,.opt .otx span,.opt .otx em{display:block}
 .opts:has(.opt.hasimg){grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+
+/* booking form: missing-field guidance */
+input.bad,select.bad,textarea.bad{border-color:#ff7b66!important;box-shadow:0 0 0 1px #ff7b66}
+.opts.bad{outline:1px solid #ff7b66;outline-offset:6px}
+.fmsg{color:#ff9b8a;font-size:13px;margin-top:6px;grid-column:1/-1}
+.est .miss{flex-basis:100%;margin:2px 0 0;font-size:13px;line-height:1.5;color:#ff9b8a;letter-spacing:.02em}
+.est .miss.okk{color:var(--wa)}
+.err{font-size:14px}
