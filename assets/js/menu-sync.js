@@ -5,7 +5,7 @@
   'use strict';
   var API = window.SAHARA_API, S = window.SAHARA;
   if (!API || !S) return;
-  var KEY = 'sahara-menu-v2', applied = '', MENU = null;
+  var KEY = 'sahara-menu-v3', applied = '', MENU = null;
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var num = function (n) { return (Math.round(n * 100) / 100).toLocaleString('en-US'); };
@@ -19,11 +19,17 @@
     m.categories.forEach(function (c) { cats[c.id] = { name: c.name }; });
     S.cats = cats;
     S.items = m.services.map(function (s) {
-      return { id: s.id, name: s.name, blurb: s.blurb || '', cat: s.category_id, bookable: !!s.online_bookable, opts: s.options.map(function (o) { return [o.minutes, o.price / 100]; }) };
+      return { id: s.id, name: s.name, blurb: s.blurb || '', desc: s.description || '', benefits: s.benefits || '', photo: s.photo || '', alt: s.photo_alt || '', cat: s.category_id, bookable: !!s.online_bookable, opts: s.options.map(function (o) { return [o.minutes, o.price / 100]; }) };
     });
     S.team = m.staff || null;
   }
 
+  var imgUrl = function (p) { return p ? (p.charAt(0) === '/' ? API + p : p) : ''; };
+  function cardHtml(i) {
+    var more = (S.treatmentPages || []).indexOf(i.id) > -1 ? '<span class="more">Learn more →</span>' : '<span class="more">Book →</span>';
+    var href = (S.treatmentPages || []).indexOf(i.id) > -1 ? '' : 'book.html?treatment=' + encodeURIComponent(i.id);
+    return '<a class="card link svc rv in" data-svc="' + esc(i.id) + '" href="' + esc(href) + '"><div class="cimg' + (i.photo ? '' : ' empty') + '"><img data-svc-img src="' + esc(imgUrl(i.photo)) + '" alt="' + esc(i.alt || i.name + ' at home in Dubai') + '" loading="lazy" width="960" height="640"></div><h3 style="font-size:21px">' + esc(i.name) + '</h3><p>' + esc(i.blurb) + '</p><span class="from" data-price-svc="' + esc(i.id) + '">' + priceLabel(i.opts) + '</span>' + more + '</a>';
+  }
   function rowHtml(i) {
     return '<tr><td class="n"><b>' + esc(i.name) + '</b><span>' + esc(i.blurb) + '</span></td><td>' + (durLabel(i.opts) || '—') + '</td><td class="p">' + priceLabel(i.opts) +
       '</td><td class="b"><a class="btn sm ghost" href="book.html?treatment=' + encodeURIComponent(i.id) + '">Book</a></td></tr>';
@@ -53,6 +59,12 @@
       });
       groups.forEach(function (g) { if (!S.cats[g.id]) g.style.display = 'none'; });
     }
+    // new treatments added in admin get a card in their category grid
+    $$('[data-svc-grid]').forEach(function (g) {
+      catItems(g.getAttribute('data-svc-grid')).forEach(function (i) {
+        if (!g.querySelector('[data-svc="' + i.id + '"]')) { var d = document.createElement('div'); d.innerHTML = cardHtml(i); g.appendChild(d.firstChild); }
+      });
+    });
     // per-treatment cards
     $$('[data-svc]').forEach(function (card) {
       var i = byId(card.getAttribute('data-svc'));
@@ -60,6 +72,23 @@
       card.style.display = '';
       var h = card.querySelector('h3'), p = card.querySelector('p'), f = card.querySelector('[data-price-svc]');
       if (h) h.textContent = i.name; if (p) p.textContent = i.blurb; if (f) f.textContent = priceLabel(i.opts);
+      var im = card.querySelector('img[data-svc-img]'); if (im && i.photo) { var u = imgUrl(i.photo); if (im.getAttribute('src') !== u) im.setAttribute('src', u); if (i.alt) im.alt = i.alt; }
+      var cm = card.querySelector('.cimg'); if (cm && im && (i.photo || im.getAttribute('src'))) cm.classList.remove('empty');
+    });
+    // treatment page: photo, long description, benefits
+    $$('img[data-svc-hero]').forEach(function (im) {
+      var i = byId(im.getAttribute('data-svc-hero')); if (!i) return;
+      if (i.photo) { var u = imgUrl(i.photo); if (im.getAttribute('src') !== u) im.setAttribute('src', u); }
+      if (i.alt) im.alt = i.alt;
+    });
+    $$('.split [data-svc-desc]').forEach(function (p) {
+      var hero = document.querySelector('img[data-svc-hero]'); var i = hero && byId(hero.getAttribute('data-svc-hero'));
+      if (i && i.desc) p.textContent = i.desc;
+    });
+    $$('ul[data-svc-benefits]').forEach(function (ul) {
+      var hero = document.querySelector('img[data-svc-hero]'); var i = hero && byId(hero.getAttribute('data-svc-hero'));
+      var lines = i && i.benefits ? i.benefits.split(/\r?\n/).map(function (x) { return x.trim(); }).filter(Boolean) : [];
+      if (lines.length) ul.innerHTML = lines.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
     });
     // treatment page price rows
     $$('tbody[data-svc-rows]').forEach(function (tb) {

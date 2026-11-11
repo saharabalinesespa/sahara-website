@@ -288,3 +288,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold);outline:0}
  .rp-badge{padding:4px;gap:0}.rp-badge-text{display:none}
  select,input,textarea{font-size:16px}
 }
+
+/* service cards with photos (managed from the admin portal) */
+.card.svc{padding:0 0 26px;overflow:hidden}
+.card.svc>h3,.card.svc>p,.card.svc>.from,.card.svc>.more{margin-left:26px;margin-right:26px}
+.card.svc>h3{margin-top:20px}
+.card.svc .cimg{aspect-ratio:3/2;overflow:hidden;background:var(--bg2,#1d1810);border-bottom:1px solid var(--line)}
+.card.svc .cimg img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1s ease}
+.card.svc:hover .cimg img{transform:scale(1.05)}
+.card.svc .cimg.empty{display:none}

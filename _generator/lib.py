@@ -146,6 +146,6 @@ def price_rows(cat, with_book=True):
     return f'<table class="ptable" data-menu-cat="{cat}"><thead><tr><th>Treatment</th><th>Duration</th><th>Price</th><th></th></tr></thead><tbody>{rows}</tbody></table>'
 
 def data_js():
-    d={"slug":SLUG,"phone":PHONE,"minOrder":MIN_ORDER,"cats":{c:{"name":CATS[c][0]} for c in CATS},
+    d={"slug":SLUG,"treatmentPages":[k for k in TX if k in SLUG],"phone":PHONE,"minOrder":MIN_ORDER,"cats":{c:{"name":CATS[c][0]} for c in CATS},
        "items":[{"id":i[0],"name":i[1],"blurb":i[2],"opts":[list(o) for o in i[3]],"cat":i[4]} for i in ITEMS]}
     return "window.SAHARA="+json.dumps(d,ensure_ascii=False)+";"

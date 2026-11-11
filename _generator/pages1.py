@@ -61,25 +61,27 @@ def price_list():
 <div class="btns"><a class="btn" href="book.html">Book a Treatment</a><a class="btn ghost" href="packages.html">Signature Packages</a><a class="btn ghost" href="gift-vouchers.html">Gift Vouchers</a></div></div></section>'''
     return page("price-list.html","Price List | Home Spa & Massage Dubai | Sahara Balinese Spa","Sahara Balinese Spa price list: massage from AED 250, facials from AED 200, body scrubs, nails and corporate wellness. Travel within Dubai included.",body,"price-list",[crumb_schema("price-list.html",("Price List",None))])
 
+def svc_card(i, href=None, more=""):
+    id_=i[0]; href=href or (SLUG[id_]+".html" if id_ in SLUG and id_ in TX else f"book.html?treatment={id_}")
+    m=f'<span class="more">{more}</span>' if more else ""
+    return (f'<a class="card link svc rv" data-svc="{id_}" href="{href}"><div class="cimg"><img data-svc-img src="assets/services/{id_}.webp" alt="{esc(i[1])} at home in Dubai" loading="lazy" width="960" height="640"></div>'
+            f'<h3 style="font-size:21px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from" data-price-svc="{id_}">{esc(price_label(i))}</span>{m}</a>')
+
 def services():
     cards=""
     for c in CATS:
         its=items(c); fr=min(frm(i) for i in its)
         cards+=f'<a class="card link rv" href="{CATS[c][2]}.html"><h3>{esc(CATS[c][0])}</h3><p>{esc(CATS[c][1])}</p><span class="from" data-from-cat="{c}" data-count="1">From AED {fr} · {len(its)} treatments</span><span class="more">Explore →</span></a>'
-    mcards="".join(f'<a class="card link rv" data-svc="{i[0]}" href="{SLUG[i[0]]}.html"><h3 style="font-size:21px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from" data-price-svc="{i[0]}">{esc(price_label(i))}</span></a>' for i in items("massage"))
+    mcards="".join(svc_card(i) for i in items("massage"))
     body=pagehero("Services",'Our <em>services</em>',"The complete Sahara menu — all prices inclusive, all services mobile.",crumbs(("Services",None)))+f'''
 <section class="sec"><div class="wrap"><div class="grid g3">{cards}</div></div></section>
-<section class="sec alt"><div class="wrap"><div class="sechead rv"><span class="eyebrow">Massage Therapy</span><h2>Massage <em>treatments</em></h2></div><div class="grid g3">{mcards}</div></div></section>{cta_band()}'''
+<section class="sec alt"><div class="wrap"><div class="sechead rv"><span class="eyebrow">Massage Therapy</span><h2>Massage <em>treatments</em></h2></div><div class="grid g3" data-svc-grid="massage">{mcards}</div></div></section>{cta_band()}'''
     return page("services.html","Services | Balinese Massage, Facials, Body Scrub & Nails | Sahara Dubai","Explore Sahara's home spa menu in Dubai: Balinese, deep tissue, hot stone and Thai massage, facials, body scrubs, nails and corporate wellness.",body,"services",[crumb_schema("services.html",("Services",None))])
 
 def category(c):
     name,desc,slug=CATS[c]
     extra=""
-    if c=="massage":
-        extra=f'<div class="grid g3" style="margin-bottom:56px">'+"".join(f'<a class="card link rv" data-svc="{i[0]}" href="{SLUG[i[0]]}.html"><h3 style="font-size:21px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from" data-price-svc="{i[0]}">{esc(price_label(i))}</span><span class="more">Learn more →</span></a>' for i in items("massage"))+'</div>'
-    else:
-        extra=price_rows(c)
-    if c=="massage": extra+=price_rows(c)
+    extra=f'<div class="grid g3" data-svc-grid="{c}" style="margin-bottom:56px">'+"".join(svc_card(i,more=("Learn more →" if i[0] in SLUG and i[0] in TX else "Book →")) for i in items(c))+'</div>'+price_rows(c)
     body=pagehero(name,f'{esc(name)} <em>at home in Dubai</em>',desc,crumbs(("Services","services.html"),(name,None)))+f'<section class="sec" style="padding-top:48px"><div class="wrap">{extra}<div class="btns"><a class="btn" href="book.html">Book a Treatment</a><a class="btn ghost" href="price-list.html">Full Price List</a></div></div></section>{cta_band()}'
     return page(f"{slug}.html",f"{name} at Home in Dubai | Sahara Balinese Spa",f"{desc} Travel included across Dubai.",body,"services",[crumb_schema(f"{slug}.html",("Services","services.html"),(name,None))])
 
@@ -88,15 +90,14 @@ def treatment(it):
     rows="".join(f'<tr><td class="n"><b>{o[0]} minutes</b></td><td class="p">AED {o[1]}</td><td class="b"><a class="btn sm ghost" href="book.html?treatment={id_}">Book</a></td></tr>' for o in it[3])
     best="".join(f"<li>{esc(b)}</li>" for b in t["best"])
     others=[i for i in items("massage") if i[0]!=id_][:3]
-    rel="".join(f'<a class="card link rv" data-svc="{i[0]}" href="{SLUG[i[0]]}.html"><h3 style="font-size:20px">{esc(i[1])}</h3><p>{esc(i[2])}</p><span class="from" data-price-svc="{i[0]}">{esc(price_label(i))}</span></a>' for i in others)
-    imgs={"balinese":"spa-massage-2.webp","swedish":"spa-massage-1.webp","hot-stone":"image8.webp","couple":"image6.webp","four-hands":"image10.webp"}
-    img=imgs.get(id_,"spa-massage-2.webp")
+    rel="".join(svc_card(i) for i in others)
+    img=f"services/{id_}.webp"
     note="<p class=\"note\">Pregnant, injured or managing a medical condition? Tell us before you book so we can tailor the treatment or advise if it isn’t suitable.</p>"
     faq=t["faq"]+[("What do you bring?","Everything: a professional massage table, fresh linens and towels, and Balinese oils. You only need a clear space of about 2 m × 2 m."),("Can I request a specific therapist?","Yes — mention your preferred therapist when booking and we will try to send her, subject to availability.")]
     body=pagehero(it[1],f'{esc(it[1])} <em>at home in Dubai</em>',it[2]+". Delivered by certified Balinese therapists.",crumbs(("Services","services.html"),(it[1],None)))+f'''
-<section class="sec"><div class="wrap split"><div class="rv"><span class="eyebrow">The treatment</span><h2 style="margin:18px 0 20px">What is <em>{esc(it[1].lower())}?</em></h2><p>{esc(t["what"])}</p><p><b style="color:var(--cream)">Pressure:</b> {esc(t["pressure"])}</p><div class="btns"><a class="btn" href="book.html?treatment={id_}">Book This Treatment</a><a class="btn wa" href="{WA_HELLO}" target="_blank" rel="noopener">WhatsApp</a></div></div>
-<div class="photo tall rv"><img src="assets/img/{img}" alt="Sahara therapist giving a massage treatment" loading="lazy"></div></div></section>
-<section class="sec alt"><div class="wrap split"><div class="rv"><span class="eyebrow">Is it right for you?</span><h2 style="margin:18px 0 20px">Who <em>loves it</em></h2><ul class="ticks">{best}</ul>{note}</div>
+<section class="sec"><div class="wrap split"><div class="rv"><span class="eyebrow">The treatment</span><h2 style="margin:18px 0 20px">What is <em>{esc(it[1].lower())}?</em></h2><p data-svc-desc>{esc(t["what"])}</p><p><b style="color:var(--cream)">Pressure:</b> {esc(t["pressure"])}</p><div class="btns"><a class="btn" href="book.html?treatment={id_}">Book This Treatment</a><a class="btn wa" href="{WA_HELLO}" target="_blank" rel="noopener">WhatsApp</a></div></div>
+<div class="photo tall rv"><img data-svc-img data-svc-hero="{id_}" src="assets/{img}" alt="{esc(it[1])} by a Sahara therapist at home in Dubai" loading="eager"></div></div></section>
+<section class="sec alt"><div class="wrap split"><div class="rv"><span class="eyebrow">Is it right for you?</span><h2 style="margin:18px 0 20px">Who <em>loves it</em></h2><ul class="ticks" data-svc-benefits>{best}</ul>{note}</div>
 <div class="rv"><span class="eyebrow">Prices</span><h2 style="margin:18px 0 10px">{esc(it[1])} <em>prices</em></h2><table class="ptable"><thead><tr><th>Duration</th><th>Price</th><th></th></tr></thead><tbody data-svc-rows="{id_}">{rows}</tbody></table><p style="font-size:14px;margin-top:14px">Prices include travel within Dubai. Minimum booking value AED {MIN_ORDER}.</p></div></div></section>
 <section class="sec"><div class="wrap split rev"><div class="rv"><span class="eyebrow">Your appointment</span><h2 style="margin:18px 0 26px">What <em>happens</em></h2><ol class="steps"><li><h4>Your therapist arrives</h4><p>She arrives on time with the table, linens, towels and oils, and sets up quietly.</p></li><li><h4>A short consultation</h4><p>Tell her about sensitive areas, health conditions and your preferred pressure.</p></li><li><h4>Your treatment</h4><p>Relax while she works, adapting pressure as she goes.</p></li><li><h4>Aftercare</h4><p>Drink some water and take it easy — no traffic to face.</p></li></ol></div>
 <div class="rv"><span class="eyebrow">Good to know</span><h2 style="margin:18px 0 20px">Frequently asked <em>questions</em></h2>{faq_html(faq)}</div></div></section>
