@@ -4,7 +4,7 @@ def home():
     cat_cards=""
     for c in CATS:
         its=items(c); fr=min(frm(i) for i in its)
-        cat_cards+=f'<a class="card link rv" href="{CATS[c][2]}.html"><h3>{esc(CATS[c][0])}</h3><p>{esc(CATS[c][1])}</p><span class="from" data-from-cat="{c}">From AED {fr}</span><span class="more">Explore →</span></a>'
+        cat_cards+=f'<a class="card link svc rv" href="{CATS[c][2]}.html">{cat_img(c)}<h3>{esc(CATS[c][0])}</h3><p>{esc(CATS[c][1])}</p><span class="from" data-from-cat="{c}">From AED {fr}</span><span class="more">Explore →</span></a>'
     pk="".join(f'<div class="card rv"><span class="num">{r}</span><h3>{esc(n)}</h3><p>{esc(t)}</p><span class="from">AED {p} · {esc(d)}</span><a class="more" href="packages.html">View package →</a></div>' for r,n,t,inc,d,p in PACKAGES)
     gal=''.join(f'<div class="photo rv"><img src="assets/img/{f}" alt="{a}" loading="lazy"></div>' for f,a in [("spa-massage-2.webp","Therapist giving a shoulder massage with Balinese oil"),("image6.webp","Two Sahara therapists giving a poolside massage"),("image10.webp","Sahara therapists giving a treatment by the pool"),("image8.webp","Treatment room set up with Balinese textiles"),("spa-massage-1.webp","Relaxing head and ear massage surrounded by tropical plants")])
     ritual=[("Two hours · seven movements","An uninterrupted sequence, opened with a footbath of warm water and flower petals."),("Frangipani-infused coconut oil","Cold-pressed virgin coconut oil, steeped with frangipani and a trace of lemongrass."),("Warmed volcanic basalt","Stones gathered from the island's rivers, warmed to the temperature of resting skin."),("Balinese palm-pressure lineage","Long, unbroken strokes drawn from a technique passed down within healing families."),("One therapist, uninterrupted","A single certified Balinese therapist attends the full two hours. No handovers."),("Jasmine steam finish","Closed with warm towels infused with jasmine, and a moment of stillness.")]
@@ -71,7 +71,7 @@ def services():
     cards=""
     for c in CATS:
         its=items(c); fr=min(frm(i) for i in its)
-        cards+=f'<a class="card link rv" href="{CATS[c][2]}.html"><h3>{esc(CATS[c][0])}</h3><p>{esc(CATS[c][1])}</p><span class="from" data-from-cat="{c}" data-count="1">From AED {fr} · {len(its)} treatments</span><span class="more">Explore →</span></a>'
+        cards+=f'<a class="card link svc rv" href="{CATS[c][2]}.html">{cat_img(c)}<h3>{esc(CATS[c][0])}</h3><p>{esc(CATS[c][1])}</p><span class="from" data-from-cat="{c}" data-count="1">From AED {fr} · {len(its)} treatments</span><span class="more">Explore →</span></a>'
     mcards="".join(svc_card(i) for i in items("massage"))
     body=pagehero("Services",'Our <em>services</em>',"The complete Sahara menu — all prices inclusive, all services mobile.",crumbs(("Services",None)))+f'''
 <section class="sec"><div class="wrap"><div class="grid g3">{cards}</div></div></section>

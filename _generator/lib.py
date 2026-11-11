@@ -1,4 +1,4 @@
-import json, html as H
+import json, os, html as H
 from data import *
 
 def esc(s): return H.escape(s, quote=True)
@@ -138,14 +138,18 @@ def faq_html(faqs, schema_out=None):
 def faq_schema(faqs):
     return {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in faqs]}
 
+CAT_COVER={"massage":"balinese","facial":"rejuvenating-facial","body":"body-scrub","nails":"manicure","corporate":"corporate"}
+def cat_img(c):
+    return f'<div class="cimg"><img src="assets/services/{CAT_COVER.get(c,"balinese")}.webp" alt="{esc(CATS[c][0])} at home in Dubai" loading="lazy" width="960" height="640"></div>'
+
 def price_rows(cat, with_book=True):
     rows=""
     for it in items(cat):
         d=dur_label(it)
-        rows+=f'<tr><td class="n"><b>{esc(it[1])}</b><span>{esc(it[2])}</span></td><td>{esc(d) if d else "—"}</td><td class="p">{esc(price_label(it))}</td><td class="b"><a class="btn sm ghost" href="book.html?treatment={it[0]}">Book</a></td></tr>'
+        rows+=f'<tr><td class="n"><div class="rw"><img class="rimg" data-svc-img data-rid="{it[0]}" src="assets/services/{it[0]}.webp" alt="{esc(it[1])}" loading="lazy" width="96" height="64"><div><b>{esc(it[1])}</b><span>{esc(it[2])}</span></div></div></td><td>{esc(d) if d else "—"}</td><td class="p">{esc(price_label(it))}</td><td class="b"><a class="btn sm ghost" href="book.html?treatment={it[0]}">Book</a></td></tr>'
     return f'<table class="ptable" data-menu-cat="{cat}"><thead><tr><th>Treatment</th><th>Duration</th><th>Price</th><th></th></tr></thead><tbody>{rows}</tbody></table>'
 
 def data_js():
-    d={"slug":SLUG,"treatmentPages":[k for k in TX if k in SLUG],"phone":PHONE,"minOrder":MIN_ORDER,"cats":{c:{"name":CATS[c][0]} for c in CATS},
+    d={"slug":SLUG,"treatmentPages":[k for k in TX if k in SLUG],"stock":[i[0] for i in ITEMS if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","assets","services",i[0]+".webp"))],"phone":PHONE,"minOrder":MIN_ORDER,"cats":{c:{"name":CATS[c][0]} for c in CATS},
        "items":[{"id":i[0],"name":i[1],"blurb":i[2],"opts":[list(o) for o in i[3]],"cat":i[4]} for i in ITEMS]}
     return "window.SAHARA="+json.dumps(d,ensure_ascii=False)+";"

@@ -25,13 +25,15 @@
   }
 
   var imgUrl = function (p) { return p ? (p.charAt(0) === '/' ? API + p : p) : ''; };
+  var pic = function (i) { return i.photo ? imgUrl(i.photo) : ((S.stock || []).indexOf(i.id) > -1 ? 'assets/services/' + i.id + '.webp' : ''); };
   function cardHtml(i) {
     var more = (S.treatmentPages || []).indexOf(i.id) > -1 ? '<span class="more">Learn more →</span>' : '<span class="more">Book →</span>';
     var href = (S.treatmentPages || []).indexOf(i.id) > -1 ? '' : 'book.html?treatment=' + encodeURIComponent(i.id);
-    return '<a class="card link svc rv in" data-svc="' + esc(i.id) + '" href="' + esc(href) + '"><div class="cimg' + (i.photo ? '' : ' empty') + '"><img data-svc-img src="' + esc(imgUrl(i.photo)) + '" alt="' + esc(i.alt || i.name + ' at home in Dubai') + '" loading="lazy" width="960" height="640"></div><h3 style="font-size:21px">' + esc(i.name) + '</h3><p>' + esc(i.blurb) + '</p><span class="from" data-price-svc="' + esc(i.id) + '">' + priceLabel(i.opts) + '</span>' + more + '</a>';
+    return '<a class="card link svc rv in" data-svc="' + esc(i.id) + '" href="' + esc(href) + '"><div class="cimg' + (pic(i) ? '' : ' empty') + '"><img data-svc-img src="' + esc(pic(i)) + '" alt="' + esc(i.alt || i.name + ' at home in Dubai') + '" loading="lazy" width="960" height="640"></div><h3 style="font-size:21px">' + esc(i.name) + '</h3><p>' + esc(i.blurb) + '</p><span class="from" data-price-svc="' + esc(i.id) + '">' + priceLabel(i.opts) + '</span>' + more + '</a>';
   }
   function rowHtml(i) {
-    return '<tr><td class="n"><b>' + esc(i.name) + '</b><span>' + esc(i.blurb) + '</span></td><td>' + (durLabel(i.opts) || '—') + '</td><td class="p">' + priceLabel(i.opts) +
+    var im = pic(i);
+    return '<tr><td class="n"><div class="rw">' + (im ? '<img class="rimg" data-svc-img data-rid="' + esc(i.id) + '" src="' + esc(im) + '" alt="' + esc(i.alt || i.name) + '" loading="lazy" width="96" height="64">' : '<span class="rimg none"></span>') + '<div><b>' + esc(i.name) + '</b><span>' + esc(i.blurb) + '</span></div></div></td><td>' + (durLabel(i.opts) || '—') + '</td><td class="p">' + priceLabel(i.opts) +
       '</td><td class="b"><a class="btn sm ghost" href="book.html?treatment=' + encodeURIComponent(i.id) + '">Book</a></td></tr>';
   }
   function tableHtml(c) {

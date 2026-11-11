@@ -59,7 +59,8 @@ if(bk){
   Object.keys(cats).forEach(function(c){
     html+='<div class="cathead">'+cats[c].name+'</div>';
     S.items.filter(function(i){return i.cat===c}).forEach(function(i){
-      html+='<button type="button" class="opt" data-id="'+i.id+'"><b>'+i.name+'</b><span>'+i.blurb+'</span><em>'+(i.cat==='hair'?'From ':'')+aed(i.opts[0][1])+(i.opts.length>1||i.cat==='hair'?'+':'')+'</em></button>';
+      var pu=i.photo?(i.photo.charAt(0)==='/'?(window.SAHARA_API||'')+i.photo:i.photo):((S.stock||[]).indexOf(i.id)>-1?'assets/services/'+i.id+'.webp':'');
+      html+='<button type="button" class="opt'+(pu?' hasimg':'')+'" data-id="'+i.id+'">'+(pu?'<img class="oimg" src="'+pu+'" alt="" loading="lazy" width="960" height="640">':'')+'<span class="otx"><b>'+i.name+'</b><span>'+i.blurb+'</span><em>'+(i.cat==='hair'?'From ':'')+aed(i.opts[0][1])+(i.opts.length>1||i.cat==='hair'?'+':'')+'</em></span></button>';
     });
   });
   optsEl.innerHTML=html;
