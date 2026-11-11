@@ -59,9 +59,9 @@ def footer():
 <div><a class="brand" href="index.html"><img src="assets/img/logo-mark.webp" alt="" width="38" height="44"><span><b>SAHARA BALINESE</b><small>SPA &amp; SALON · DUBAI</small></span></a>
 <p style="font-size:14.5px;max-width:300px">Balinese spa &amp; salon treatments delivered to your home, hotel or villa across Dubai.</p>
 <p style="margin-top:14px"><a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a> · <a href="{FACEBOOK}" target="_blank" rel="noopener">Facebook</a> · <a href="{GOOGLE_REVIEW}" target="_blank" rel="noopener" data-track="review_click">★ Review us on Google</a></p></div>
-<div><h4>Explore</h4><ul><li><a href="price-list.html">Price List</a></li><li><a href="packages.html">Packages</a></li><li><a href="bridal.html">Bridal</a></li><li><a href="gift-vouchers.html">Gift Vouchers</a></li><li><a href="meet-our-therapists.html">Our Therapists</a></li><li><a href="areas-we-serve.html">Areas We Serve</a></li><li><a href="reviews.html">Reviews</a></li><li><a href="faqs.html">FAQs</a></li><li><a href="about.html">About</a></li></ul></div>
-<div><h4>Services</h4><ul>{svc}<li><a href="book.html">Book a Treatment</a></li></ul></div>
-<div><h4>Contact</h4><ul><li>Mobile service across Dubai</li><li>Open {HOURS}</li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="tel:+{PHONE}">{PHONE_DISPLAY}</a></li><li><a href="tel:+{PHONE2}">{PHONE2_DISPLAY}</a></li><li><a href="{WA_HELLO}" target="_blank" rel="noopener">Chat on WhatsApp</a></li></ul></div>
+<div><p class="fh">Explore</p><ul><li><a href="price-list.html">Price List</a></li><li><a href="packages.html">Packages</a></li><li><a href="bridal.html">Bridal</a></li><li><a href="gift-vouchers.html">Gift Vouchers</a></li><li><a href="meet-our-therapists.html">Our Therapists</a></li><li><a href="areas-we-serve.html">Areas We Serve</a></li><li><a href="reviews.html">Reviews</a></li><li><a href="faqs.html">FAQs</a></li><li><a href="about.html">About</a></li></ul></div>
+<div><p class="fh">Services</p><ul>{svc}<li><a href="book.html">Book a Treatment</a></li></ul></div>
+<div><p class="fh">Contact</p><ul><li>Mobile service across Dubai</li><li>Open {HOURS}</li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="tel:+{PHONE}">{PHONE_DISPLAY}</a></li><li><a href="tel:+{PHONE2}">{PHONE2_DISPLAY}</a></li><li><a href="{WA_HELLO}" target="_blank" rel="noopener">Chat on WhatsApp</a></li></ul></div>
 </div>
 <div class="fine"><span>© 2026 Sahara Balinese Spa &amp; Salon · Dubai, UAE</span><span><a href="terms-conditions.html">Terms &amp; Cancellation</a> · <a href="privacy-policy.html">Privacy</a></span></div>
 </div></footer>
@@ -89,7 +89,8 @@ def page(fname, title, desc, body, active="", schema=None, hero_img=None, extra_
 <meta name="description" content="{esc(desc)}">
 <link rel="canonical" href="{canon}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Sahara Balinese Spa &amp; Salon"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{canon}"><meta property="og:image" content="{BASE}/assets/img/spa-massage-1.webp">
-<meta name="theme-color" content="#0A0602">
+<meta name="theme-color" content="#0A0602"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(desc)}"><meta name="twitter:image" content="{BASE}/assets/img/spa-massage-1.webp">
+<link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest">
 {TRACK_HEAD}<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">

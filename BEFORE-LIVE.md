@@ -25,3 +25,9 @@ Built from the client brief (SAHARA BALINESE SPA WEBSITE PROJECT.docx, Nov 2026)
 
 ## Rebuild
 `cd _generator && python3 build.py` (edit data.py for prices/contacts).
+
+## Custom-domain switch (SEO addresses)
+Canonical links, sitemap, robots.txt, social previews and the Arabic page now use the live GitHub address. When the custom domain is attached:
+1. Rename `CNAME.pending` to `CNAME`.
+2. Rebuild with the domain: `SAHARA_BASE=https://saharabalinesespas.com SAHARA_API=https://sahara-booking.saharabalinesespa.workers.dev python3 _generator/build.py`
+3. Publish, then add the domain to `ALLOWED_ORIGINS` in the backend (already listed) and submit the new sitemap in Google Search Console.

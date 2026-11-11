@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://saharabalinesespas.com/sitemap.xml
+Sitemap: https://saharabalinesespa.github.io/sahara-website/sitemap.xml

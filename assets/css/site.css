@@ -1,6 +1,6 @@
 /* Sahara Balinese Spa & Salon — site stylesheet (dark / gold) */
 :root{
-  --bg:#0A0602;--bg2:#120b04;--bg3:#1a1006;--gold:#DBA83C;--gold2:#F0CB6A;--cream:#FFF4E2;--amber:#C4A882;--muted:#8A6A3E;--faint:#6A5030;
+  --bg:#0A0602;--bg2:#120b04;--bg3:#1a1006;--gold:#DBA83C;--gold2:#F0CB6A;--cream:#FFF4E2;--amber:#C4A882;--muted:#9C7B48;--faint:#9A8058;
   --line:rgba(219,168,60,.18);--line2:rgba(219,168,60,.34);--wa:#25D366;
   --pf:'Playfair Display',Georgia,serif;--cg:'Cormorant Garamond',Georgia,serif;--ral:'Raleway',system-ui,sans-serif;
   --hdr:76px;--pad:clamp(20px,6vw,88px);--max:1240px;
@@ -243,7 +243,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold);outline:0}
 
 /* ---- light mode (white & black, gold accents) ---- */
 [data-theme="light"]{
-  --bg:#FFFFFF;--bg2:#F6F2EA;--bg3:#EFE8DA;--gold:#8E6A1B;--gold2:#6F5012;--cream:#111111;--amber:#3B3326;--muted:#6B5D45;--faint:#8A7B5F;
+  --bg:#FFFFFF;--bg2:#F6F2EA;--bg3:#EFE8DA;--gold:#82600F;--gold2:#6A4C0D;--cream:#111111;--amber:#3B3326;--muted:#6B5D45;--faint:#716348;
   --line:rgba(17,17,17,.14);--line2:rgba(142,106,27,.45);
 }
 [data-theme="light"] body{background:var(--bg)}
@@ -316,3 +316,18 @@ input.bad,select.bad,textarea.bad{border-color:#ff7b66!important;box-shadow:0 0 
 .est .miss{flex-basis:100%;margin:2px 0 0;font-size:13px;line-height:1.5;color:#ff9b8a;letter-spacing:.02em}
 .est .miss.okk{color:var(--wa)}
 .err{font-size:14px}
+
+/* v2.2 QA fixes: footer headings (were h4), step headings, compact sticky confirm bar, comfortable tap targets */
+.ftr .fh{font-family:var(--ral);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:400;margin-bottom:18px}
+.steps h3{font-size:19px;margin-bottom:4px}
+@media(max-width:860px){
+ .est{padding:10px 14px;gap:6px 12px;flex-wrap:wrap}
+ .est>div:first-child{flex:1 1 auto;min-width:0}
+ .est .t{font-size:24px}.est small{font-size:10px;letter-spacing:.1em}
+ .est .btn{flex:0 0 auto;padding:12px 18px;min-height:44px;font-size:11px}
+ .est .miss{font-size:12px;line-height:1.4;margin:0}
+}
+@media(pointer:coarse){
+ .ftr li a,.crumbs a,.dd a,.faq summary,.ptabs a{min-height:44px;display:inline-flex;align-items:center}
+ .btn.sm{min-height:44px}
+}

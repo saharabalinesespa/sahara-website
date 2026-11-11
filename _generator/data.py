@@ -11,7 +11,7 @@ TIKTOK = "https://www.tiktok.com/@saharabalinesehomespa"
 GOOGLE_REVIEW = "https://g.page/r/CYgduMaDQaJUEAI/review"
 import os as _os
 API_BASE = _os.environ.get("SAHARA_API", "").rstrip("/")   # set at build time to switch on live booking (see backend README)
-BASE = "https://saharabalinesespas.com"   # change when custom domain is attached
+BASE = _os.environ.get("SAHARA_BASE", "https://saharabalinesespa.github.io/sahara-website").rstrip("/")   # live address; at custom-domain launch build with SAHARA_BASE=https://saharabalinesespas.com
 HOURS = "10:00 AM – 12:00 AM, 7 days"
 MIN_ORDER = 200   # menu now has AED 200 items; old site rule was 250 - confirm with client
 
