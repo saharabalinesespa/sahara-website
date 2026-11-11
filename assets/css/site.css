@@ -274,3 +274,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold);outline:0}
 [data-theme="light"] .hero .btn.ghost{color:#DBA83C}
 [data-theme="light"] .rp-badge{background:#0A0602!important;border-color:rgba(219,168,60,.4)!important}
 [data-theme="light"] .mbar .b{background:#111;color:#F0CB6A}
+
+/* ---- mobile hardening (v2.1) ---- */
+@media(max-width:380px){
+ .brand b{font-size:12px;letter-spacing:.1em}.brand small{font-size:7px;letter-spacing:.16em}
+ .hdr .cta{gap:6px}.themebtn{width:38px;height:38px}.burger{width:42px;height:42px}.burger i{top:20px}
+}
+@media(max-width:860px){
+ .ftr li{padding:0}.ftr li a{display:inline-block;padding:12px 0;min-height:44px;line-height:20px}
+ .crumbs a{display:inline-block;padding:10px 4px;margin:-10px -4px}
+ .card .more{padding:14px 0;margin-top:6px}
+ .drawer a{min-height:48px}
+ .rp-badge{padding:4px;gap:0}.rp-badge-text{display:none}
+ select,input,textarea{font-size:16px}
+}
