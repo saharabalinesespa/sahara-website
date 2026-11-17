@@ -69,7 +69,7 @@ def faqs():
 
 def reviews():
     body=pagehero("Reviews",'What our <em>clients say</em>',"Read and share experiences of Sahara’s home spa service in Dubai.",crumbs(("Reviews",None)))+f'''
-<!-- Google review link is live; add verified client testimonials here when the owner supplies them. -->
+<section class="sec" id="gf-reviews" hidden style="padding-top:48px"><div class="wrap"><div class="sechead center"><span class="eyebrow">Guest feedback</span><h2>What our <em>guests say</em></h2><p class="gf-sum"></p></div><div class="gf-grid"></div><p class="gf-note center"></p></div></section>
 <section class="sec" style="padding-top:48px"><div class="wrap center"><div class="rv" style="max-width:640px;margin:0 auto"><span class="eyebrow">Share your experience</span><h2 style="margin:18px 0 16px">Tried <em>Sahara?</em></h2><p>Your feedback helps other clients choose with confidence. Review us on Google, or send us a message — we read every one.</p><div class="btns"><a class="btn" href="{GOOGLE_REVIEW}" target="_blank" rel="noopener">Review us on Google</a><a class="btn ghost" href="{WA("Hi%20Sahara%2C%20I%27d%20like%20to%20share%20feedback.")}" target="_blank" rel="noopener">Send Feedback</a></div></div></div></section>{cta_band()}'''
     return page("reviews.html","Reviews | Sahara Balinese Spa & Salon Dubai","Read and share client reviews of Sahara Balinese Spa & Salon, Dubai's mobile Balinese spa.",body,"about",[crumb_schema("reviews.html",("Reviews",None))])
 
@@ -135,3 +135,8 @@ def booking_confirmed():
 def booking_manage():
     body=pagehero("Booking",'Manage your <em>booking</em>',"View or cancel your appointment.",crumbs(("Booking",None)))+'<section class="sec" style="padding-top:48px"><div class="wrap" style="max-width:760px"><div id="bk-manage"><p>Loading your booking…</p></div></div></section>'
     return page("booking-manage.html","Manage Booking | Sahara Balinese Spa","Manage your Sahara booking.",body,"book",None,None,'<meta name="robots" content="noindex">')
+
+
+def feedback():
+    body=pagehero("Feedback",'How was your <em>treatment?</em>',"Your honest feedback helps us look after every guest better.",crumbs(("Feedback",None)))+'<section class="sec" style="padding-top:48px"><div class="wrap" style="max-width:640px"><div id="fb-box"><p>Loading…</p></div></div></section>'
+    return page("feedback.html","Feedback | Sahara Balinese Spa","Rate your Sahara treatment.",body,"",None,None,'<meta name="robots" content="noindex">')

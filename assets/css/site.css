@@ -331,3 +331,11 @@ input.bad,select.bad,textarea.bad{border-color:#ff7b66!important;box-shadow:0 0 
  .ftr li a,.crumbs a,.dd a,.faq summary,.ptabs a{min-height:44px;display:inline-flex;align-items:center}
  .btn.sm{min-height:44px}
 }
+
+/* guest feedback */
+.gf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:28px}
+.gf-card{background:var(--bg3);border:1px solid var(--line);padding:24px;margin:0}
+.gf-card blockquote{margin:12px 0;font-size:16px;line-height:1.6}
+.gf-card figcaption{font-size:14px}.gf-card figcaption small{display:block;opacity:.75;margin-top:2px}
+.gf-note,.gf-sum{font-size:13px;opacity:.8;margin-top:14px}
+.fb-star:focus-visible{outline:2px solid var(--gold);outline-offset:2px}

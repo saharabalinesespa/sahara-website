@@ -13,7 +13,7 @@ for f in ["packages","bridal","vouchers","therapists","areas","faqs","reviews","
     add(fn,h)
 LIVE_ONLY=[]
 if API_BASE:
-    add("booking-confirmed.html",p2.booking_confirmed()); add("booking-manage.html",p2.booking_manage()); LIVE_ONLY=["booking-confirmed.html","booking-manage.html"]
+    add("booking-confirmed.html",p2.booking_confirmed()); add("booking-manage.html",p2.booking_manage()); add("feedback.html",p2.feedback()); LIVE_ONLY=["booking-confirmed.html","booking-manage.html","feedback.html"]
     import shutil; [shutil.copy(os.path.join(os.path.dirname(os.path.abspath(__file__)),f),os.path.join(OUT,"assets/js/"+f)) for f in ("live.js","menu-sync.js")]
 import shutil as _sh; _sh.copy(os.path.join(os.path.dirname(os.path.abspath(__file__)),'analytics.js'),os.path.join(OUT,'assets/js/analytics.js'))
 for fn,h in pages.items():

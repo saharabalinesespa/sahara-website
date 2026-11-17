@@ -121,10 +121,10 @@
 
   /* ---------------- confirmation + manage pages ---------------- */
   var REVIEW = 'https://g.page/r/CYgduMaDQaJUEAI/review';
-  function reviewPanel(done) {
+  function reviewPanel(done, tok) {
     return '<div class="panel" style="margin-top:16px"><div aria-hidden="true" style="color:var(--gold);font-size:22px;letter-spacing:5px">★★★★★</div><h3 class="st" style="margin-top:6px">' + (done ? 'How was your treatment?' : 'After your treatment') + '</h3><p>' +
       (done ? 'Thank you for choosing Sahara. Your Google review takes under a minute and helps others find us.' : 'We would be grateful for 30 seconds of your time — a Google review helps other families and professionals in Dubai find a trusted home spa.') +
-      '</p><div class="btns"><a class="btn" href="' + REVIEW + '" target="_blank" rel="noopener" data-track="review_click">Leave a Google review</a></div></div>';
+      '</p><div class="btns">' + (done && tok ? '<a class="btn" href="feedback.html?t=' + encodeURIComponent(tok) + '" data-track="feedback_open">Rate your treatment</a><a class="btn ghost" href="' + REVIEW + '" target="_blank" rel="noopener" data-track="review_click">Leave a Google review</a>' : '<a class="btn" href="' + REVIEW + '" target="_blank" rel="noopener" data-track="review_click">Leave a Google review</a>') + '</div></div>';
   }
   function once(key, fn) { try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch (e) {} fn(); }
   function apptHtml(a) {
@@ -159,7 +159,7 @@
         if (!p.late && p.refund) msg += ' Your deposit of ' + aed(p.refund) + ' will be refunded.';
         html += '<div class="panel"><h3 class="st">Need to cancel?</h3><p>' + msg + '</p><button class="btn" id="cx">Cancel this booking</button><p class="err" id="cx-err"></p></div><p style="font-size:14px">To change the time, please <a href="contact.html">contact us</a> — we will move it for you.</p>';
       }
-      html += reviewPanel(a.status === 'completed');
+      html += reviewPanel(a.status === 'completed', t);
       box.innerHTML = html;
       var b = $('#cx'); if (b) b.addEventListener('click', function () {
         if (!confirm('Cancel this booking?')) return; b.disabled = true;
@@ -168,6 +168,53 @@
     }).catch(function (ex) { box.innerHTML = '<div class="panel"><p>' + esc(ex.message) + '</p></div>'; });
   }
 
-  initConfirm(); initManage();
+
+  /* ---------------- guest feedback ---------------- */
+  function initFeedback() {
+    var box = $('#fb-box'); if (!box) return;
+    var t = new URLSearchParams(location.search).get('t');
+    if (!t) { box.innerHTML = '<div class="panel"><p>Please open this page from the link in your email.</p></div>'; return; }
+    function thanks(g, rating) {
+      box.innerHTML = '<div class="panel"><h3 class="st">Thank you' + '</h3><p>We have received your feedback' + (rating <= 3 ? ' and our team will personally follow up if needed.' : '.') + '</p>' +
+        (g ? '<p>If you would like to share your experience publicly, a Google review helps other guests find us. It is entirely optional.</p><div class="btns"><a class="btn" href="' + esc(g) + '" target="_blank" rel="noopener" data-track="review_click">Leave a Google review</a></div>' : '') + '</div>';
+    }
+    api('GET', '/api/public/feedback/' + encodeURIComponent(t)).then(function (f) {
+      if (f.done) return thanks(f.google_url, f.rating);
+      var rating = 0;
+      box.innerHTML = '<div class="panel"><h3 class="st">Hi ' + esc(f.first_name) + ', how was it?</h3><p>' + esc(f.items.join(', ')) + (f.staff.length ? ' with ' + esc(f.staff.join(' & ')) : '') + '</p>' +
+        '<div id="fb-stars" role="radiogroup" aria-label="Rating" style="display:flex;gap:6px;margin:14px 0">' + [1, 2, 3, 4, 5].map(function (n) { return '<button type="button" class="fb-star" role="radio" aria-checked="false" aria-label="' + n + ' star' + (n > 1 ? 's' : '') + '" data-n="' + n + '" style="background:none;border:0;font-size:38px;line-height:1;color:var(--line,#555);cursor:pointer;padding:4px 6px;min-width:44px;min-height:44px">★</button>'; }).join('') + '</div>' +
+        '<label for="fb-c">Anything you would like to tell us? (optional)</label><textarea id="fb-c" rows="4" maxlength="600"></textarea>' +
+        '<label id="fb-consent" style="display:none;gap:10px;align-items:flex-start;margin:12px 0"><input type="checkbox" id="fb-ok" style="width:auto;margin-top:4px"> <span>You may show my comment and first name on the Sahara website.</span></label>' +
+        '<p style="font-size:12.5px;opacity:.8">We only use your first name and comment if you tick the box above. Your contact details are never shown.</p>' +
+        '<div class="btns"><button class="btn" id="fb-go" disabled>Send feedback</button></div><p class="err" id="fb-err" role="alert"></p></div>';
+      var stars = $$('.fb-star', box), go = $('#fb-go'), c = $('#fb-c'), cons = $('#fb-consent');
+      function paint() { stars.forEach(function (s) { var on = +s.dataset.n <= rating; s.style.color = on ? 'var(--gold,#DBA83C)' : 'var(--line,#555)'; s.setAttribute('aria-checked', on && +s.dataset.n === rating ? 'true' : 'false'); }); go.disabled = !rating; }
+      stars.forEach(function (s) { s.addEventListener('click', function () { rating = +s.dataset.n; paint(); }); });
+      c.addEventListener('input', function () { cons.style.display = c.value.trim() ? 'flex' : 'none'; });
+      go.addEventListener('click', function () {
+        go.disabled = true; $('#fb-err').textContent = '';
+        api('POST', '/api/public/feedback/' + encodeURIComponent(t), { rating: rating, comment: c.value, consent: $('#fb-ok').checked }).then(function (r) {
+          window.sahTrack && window.sahTrack('feedback_submitted', { rating: rating });
+          thanks(r.google_url, rating);
+        }).catch(function (ex) { $('#fb-err').textContent = ex.message; go.disabled = false; });
+      });
+    }).catch(function (ex) { box.innerHTML = '<div class="panel"><p>' + esc(ex.message) + '</p></div>'; });
+  }
+  function initTestimonials() {
+    var home = $('#gf-home'), rev = $('#gf-reviews'); if (!home && !rev) return;
+    api('GET', '/api/public/testimonials').then(function (d) {
+      if (!d.items.length) return;
+      var card = function (i) { return '<figure class="gf-card"><div aria-label="' + i.rating + ' out of 5" style="color:var(--gold);letter-spacing:3px">' + '★'.repeat(i.rating) + '<span style="opacity:.3">' + '★'.repeat(5 - i.rating) + '</span></div><blockquote>' + esc(i.comment) + '</blockquote><figcaption>' + esc(i.name) + (i.service ? ' · ' + esc(i.service) : '') + '<small>' + (i.source === 'site' ? 'Verified Sahara booking' : i.source === 'google' ? 'From a Google review' : 'Guest message') + '</small></figcaption></figure>'; };
+      function fill(sec, items, sum) {
+        $('.gf-grid', sec).innerHTML = items.map(card).join(''); sec.hidden = false;
+        var s = $('.gf-sum', sec); if (s && sum) s.textContent = 'Average ' + d.average.toFixed(1) + ' / 5 from ' + d.count + ' rating' + (d.count === 1 ? '' : 's') + ' on our own booking feedback';
+        var n = $('.gf-note', sec); if (n) n.textContent = 'Shown with each guest’s permission. First names only.';
+      }
+      if (home) fill(home, d.items.slice(0, 3), false);
+      if (rev) fill(rev, d.items, true);
+    }).catch(function () { /* API down: sections stay hidden */ });
+  }
+
+  initConfirm(); initManage(); initFeedback(); initTestimonials();
   if ($('#bk-form') || $('#v-form')) catalog().then(function (cat) { initBooking(cat); initVoucher(cat); }).catch(function () { /* API down: legacy WhatsApp flow stays active */ });
 })();
