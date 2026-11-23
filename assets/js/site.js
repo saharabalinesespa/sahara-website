@@ -232,6 +232,7 @@ if(cf){
       {k:'wnum',label:'Mobile number',ok:!!val('wnum'),el:'#wnum',msg:'Please enter your mobile / WhatsApp number.'}
     ];
     if(live)f.push({k:'wemail',label:'Email',ok:/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('wemail')),el:'#wemail',msg:'Please enter a valid email — your confirmation is sent there.'});
+    if(document.getElementById('bk-terms'))f.push({k:'terms',label:'Agreement to the terms',ok:document.getElementById('bk-terms').checked,el:'#bk-terms',msg:'Please tick the agreement to continue.'});
     f.push({k:'addr',label:'Address or map pin',ok:!!(val('bldg')||val('pin')),el:'#bldg',msg:'Please add your building / villa community, or paste a Google Maps pin.'});
     return f;
   }
@@ -262,7 +263,7 @@ if(cf){
       if(first){first.scrollIntoView({behavior:'smooth',block:'center'});if(first.focus&&m[0].k!=='tx')try{first.focus({preventScroll:true})}catch(e){}}}
     return m.length;
   }
-  window.sahCheck={run:run,summary:summary};
+  window.sahCheck={run:run,summary:summary,missing:function(){return fields().filter(function(x){return!x.ok}).map(function(x){return x.k})}};
   var t=null;function later(){clearTimeout(t);t=setTimeout(function(){run(false,true)},250)}
   ['input','change','click'].forEach(function(ev){form.addEventListener(ev,later,true)});
   setTimeout(summary,600);setTimeout(summary,2000);

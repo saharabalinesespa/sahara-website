@@ -126,3 +126,12 @@ TX = {
  "four-hands":dict(what="Two therapists work in perfect synchrony, one on each side of the body, for a deeply immersive massage that feels like nothing else. Available in 60 or 90 minutes.",best=["Special occasions","Complete switch-off","Gifts and celebrations"],pressure="Medium",faq=[("How many therapists come?","Two therapists arrive together and work at the same time on one guest.")]),
  "couple":dict(what="Two guests, two therapists, side by side. Each guest receives their own full massage at the same time in the same room, a lovely way to share an experience at home or in a hotel suite.",best=["Couples and anniversaries","Friends or family sharing a treatment","Honeymoons and special occasions"],pressure="Medium",faq=[("Do we choose the same massage?","Usually yes for simplicity, but tell us if you would like different treatments and we will arrange it.")]),
 }
+
+# ---- Legal identity (UAE e-commerce law requires the trader's identity to be shown; Network International also checks it).
+# OWNER: fill these in exactly as on the trade licence / VAT certificate, then rebuild. Empty values are simply not shown.
+LEGAL_NAME = ""          # e.g. "Sahara Balinese Spa & Salon L.L.C"
+LICENCE_NO = ""          # trade licence number
+LICENCE_AUTH = ""        # e.g. "Dubai Department of Economy and Tourism"
+TRN = ""                 # VAT tax registration number (15 digits)
+REG_ADDRESS = ""         # registered address in Dubai
+TERMS_VERSION = "2026-11-23"

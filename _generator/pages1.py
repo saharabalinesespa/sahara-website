@@ -83,7 +83,7 @@ def category(c):
     extra=""
     extra=f'<div class="grid g3" data-svc-grid="{c}" style="margin-bottom:56px">'+"".join(svc_card(i,more=("Learn more →" if i[0] in SLUG and i[0] in TX else "Book →")) for i in items(c))+'</div>'+price_rows(c)
     body=pagehero(name,f'{esc(name)} <em>at home in Dubai</em>',desc,crumbs(("Services","services.html"),(name,None)))+f'<section class="sec" style="padding-top:48px"><div class="wrap">{extra}<div class="btns"><a class="btn" href="book.html">Book a Treatment</a><a class="btn ghost" href="price-list.html">Full Price List</a></div></div></section>{cta_band()}'
-    return page(f"{slug}.html",f"{name} at Home in Dubai | Sahara Balinese Spa",f"{desc} Travel included across Dubai.",body,"services",[crumb_schema(f"{slug}.html",("Services","services.html"),(name,None))])
+    return page(f"{slug}.html",f"{name} at Home in Dubai | Sahara Balinese Spa",f"{desc} Travel included across Dubai.",body,"services",[crumb_schema(f"{slug}.html",("Services","services.html"),(name,None))],None,f'<meta name="sah-list" content="{esc(name)}">')
 
 def treatment(it):
     id_=it[0]; t=TX[id_]; slug=SLUG[id_]
@@ -103,7 +103,7 @@ def treatment(it):
 <div class="rv"><span class="eyebrow">Good to know</span><h2 style="margin:18px 0 20px">Frequently asked <em>questions</em></h2>{faq_html(faq)}</div></div></section>
 <section class="sec alt"><div class="wrap"><div class="sechead rv"><span class="eyebrow">You may also like</span><h2>Related <em>treatments</em></h2></div><div class="grid g3">{rel}</div></div></section>{cta_band()}'''
     svc={"@context":"https://schema.org","@type":"Service","name":it[1],"description":it[2],"provider":{"@type":"DaySpa","name":"Sahara Balinese Spa & Salon"},"areaServed":"Dubai","offers":[{"@type":"Offer","priceCurrency":"AED","price":str(o[1])} for o in it[3]]}
-    return page(f"{slug}.html",f"{it[1]} at Home in Dubai | From AED {frm(it)} | Sahara",f"{it[1]} at home in Dubai by certified Balinese therapists. From AED {frm(it)}, travel included. Book on WhatsApp or online.",body,"services",[crumb_schema(f"{slug}.html",("Services","services.html"),(it[1],None)),svc,faq_schema(faq)])
+    return page(f"{slug}.html",f"{it[1]} at Home in Dubai | From AED {frm(it)} | Sahara",f"{it[1]} at home in Dubai by certified Balinese therapists. From AED {frm(it)}, travel included. Book on WhatsApp or online.",body,"services",[crumb_schema(f"{slug}.html",("Services","services.html"),(it[1],None)),svc,faq_schema(faq)],None,f'<meta name="sah-item" content="{id_}|{esc(it[1])}|{frm(it)}|{esc(it[4])}">')
 
 def book():
     goals=[("Relax & unwind","balinese,swedish,reflexology,ayurvedic","Balinese and Swedish are our calming, full-body favourites."),("Muscle pain & tension","deep-tissue,hot-stone,cupping,sports","Firmer treatments for knots, stiffness and recovery."),("Pregnancy & new mums","prenatal,postnatal","Gentle, supportive massage before and after birth."),("Glow & skin","rejuvenating-facial,express-facial","Facials tailored to your skin."),("Body renewal","body-scrub,express-body-scrub","Scrubs to exfoliate and refresh."),("Nails & more","manicure,pedicure,mani-pedi,couple,four-hands","Polish, plus treatments for two.")]

@@ -14,6 +14,8 @@
   }
   var t12 = function (t) { var p = t.split(':'), h = +p[0], ap = h >= 12 ? 'pm' : 'am'; h = h % 12 || 12; return h + ':' + p[1] + ' ' + ap; };
   var niceDate = function (d) { return new Date(d.slice(0, 10) + 'T00:00:00Z').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }); };
+  var T = function (n, p) { try { window.sahTrack && window.sahTrack(n, p || {}); } catch (e) {} };
+  var AGREE = '<div class="agree"><label><input type="checkbox" id="@ID@"> <span>I agree to the <a href="terms-conditions.html" target="_blank" rel="noopener">Terms</a>, the <a href="payments-refunds.html" target="_blank" rel="noopener">Payments &amp; Refunds Policy</a> and the <a href="privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span></label><p class="paynote">@NOTE@</p></div>';
   var catalogP = null;
   function catalog() { return catalogP || (catalogP = api('GET', '/api/public/catalog')); }
 
@@ -26,8 +28,16 @@
     $('#wnum').insertAdjacentHTML('afterend', '<label for="wemail">Email (booking confirmation)</label><input id="wemail" type="email" autocomplete="email" placeholder="you@example.com">');
     timeSel.closest('.frow').insertAdjacentHTML('afterend', '<div id="pref-wrap" class="hide"><label for="wstaff">Therapist preference (optional)</label><select id="wstaff"></select></div>');
     var btn = $('.est .btn'); btn.textContent = 'Confirm booking'; btn.classList.remove('wa');
+    var payNote = (cat.payments_enabled && cat.policy.deposit_mode !== 'none') ? 'Your deposit is paid on Network International’s secure page (Visa / Mastercard). Sahara never sees or stores your card details.' : 'No payment is taken online. You pay after your treatment.';
+    $('.est').insertAdjacentHTML('beforebegin', AGREE.replace('@ID@', 'bk-terms').replace('@NOTE@', payNote));
     var info = document.createElement('p'); info.id = 'live-info'; info.style.cssText = 'font-size:13.5px;margin-top:12px'; $('.est').parentNode.insertBefore(info, $('#bk-err'));
     var busy = false, last = 0;
+    var fs = { started: false, quoted: false, time: false, submitted: false, gone: false };
+    var ec = function (x) { return { currency: 'AED', value: x.opt.price / 100 * x.guests, items: [{ item_id: x.s.id, item_name: x.s.name, item_category: x.s.category || '', price: x.opt.price / 100, quantity: x.guests }] }; };
+    form.addEventListener('focusin', function () { if (!fs.started) { fs.started = true; T('booking_form_start', { page: location.pathname }); } });
+    timeSel.addEventListener('change', function () { var x = sel(); if (timeSel.value && x && !x.missing && !fs.time) { fs.time = true; var e = ec(x); e.shipping_tier = 'home_service'; T('add_shipping_info', e); } });
+    function leave() { if (fs.quoted && !fs.submitted && !fs.gone) { fs.gone = true; T('booking_abandon', { stage: fs.time ? 'details' : 'service_or_time', missing: window.sahCheck ? window.sahCheck.missing().join(',') : '', transport_type: 'beacon' }); } }
+    window.addEventListener('pagehide', leave); document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') leave(); });
     // date picker: min today (Dubai), max 1 year, opens on click anywhere in the field
     var dnow = new Date(Date.now() + 4 * 3600e3), pad = function (n) { return (n < 10 ? '0' : '') + n; };
     dateEl.min = dnow.getUTCFullYear() + '-' + pad(dnow.getUTCMonth() + 1) + '-' + pad(dnow.getUTCDate());
@@ -57,6 +67,7 @@
       fillStaff(x.s, x.guests); info.textContent = '';
       api('POST', '/api/public/quote', { options: [x.opt.id], guests: x.guests, date: dateEl.value || undefined }).then(function (q) {
         est.textContent = aed(q.total); estN.textContent = x.s.name + (x.opt.minutes ? ' · ' + x.opt.minutes + ' min' : '') + ' · ' + x.guests + ' guest' + (x.guests > 1 ? 's' : '') + ' · VAT included';
+        if (!fs.quoted) { fs.quoted = true; T('begin_checkout', ec(x)); }
         var dep = cat.policy.deposit_mode; if (cat.payments_enabled && dep !== 'none') {
           var amt = dep === 'percent' ? Math.round(q.total * cat.policy.deposit_value / 100) : cat.policy.deposit_value * 100;
           info.textContent = 'A deposit of ' + aed(Math.min(amt, q.total)) + ' is paid online to confirm your booking; the balance is paid after your treatment.';
@@ -81,7 +92,8 @@
       e.preventDefault(); e.stopImmediatePropagation();
       if (busy) return;
       var x = sel(), v = function (id) { return ($('#' + id).value || '').trim(); };
-      if (window.sahCheck && window.sahCheck.run(true)) return;
+      var miss = window.sahCheck ? window.sahCheck.missing().join(',') : '';
+      if (window.sahCheck && window.sahCheck.run(true)) { T('booking_blocked', { missing: miss }); return; }
       if (!x || x.missing) { err.textContent = 'Please choose a treatment that can be booked online, or contact us on WhatsApp.'; return; }
       if (!dateEl.value || !v('time')) { err.textContent = 'Please choose a date and an available time.'; return; }
       if (!v('fn') || !v('wnum')) { err.textContent = 'Please add your name and mobile number.'; return; }
@@ -89,9 +101,13 @@
       if (!v('bldg') && !v('pin')) { err.textContent = 'Please add your building/community or a Google Maps pin.'; return; }
       err.textContent = ''; busy = true; btn.disabled = true; btn.textContent = 'Booking…';
       api('POST', '/api/public/book', { date: dateEl.value, time: v('time'), options: [x.opt.id], guests: x.guests, name: (v('fn') + ' ' + v('ln')).trim(), phone: v('wnum'), email: v('wemail'),
-        building: v('bldg'), unit: v('apt'), map_link: v('pin'), notes: [v('notes'), v('heard') ? 'Heard about us: ' + v('heard') : ''].filter(Boolean).join(' | '), staff_id: v('wstaff') || undefined, website: '' })
-        .then(function (r) { window.sahTrack && window.sahTrack('booking_submitted', { value: x.opt.price / 100 * x.guests, currency: 'AED', service: x.s.name }); location.href = r.pay_url ? r.pay_url : 'booking-confirmed.html?status=' + encodeURIComponent(r.status) + '&t=' + encodeURIComponent(r.token); })
-        .catch(function (ex) { err.textContent = ex.message; if (ex.status === 409) refresh(); busy = false; btn.disabled = false; btn.textContent = 'Confirm booking'; });
+        building: v('bldg'), unit: v('apt'), map_link: v('pin'), notes: [v('notes'), v('heard') ? 'Heard about us: ' + v('heard') : ''].filter(Boolean).join(' | '), staff_id: v('wstaff') || undefined, website: '', accept_terms: $('#bk-terms').checked })
+        .then(function (r) {
+          fs.submitted = true; var e = ec(x); T('booking_submitted', e);
+          var go = r.pay_url ? r.pay_url : 'booking-confirmed.html?status=' + encodeURIComponent(r.status) + '&t=' + encodeURIComponent(r.token);
+          if (r.pay_url) { e.payment_type = 'card_network_international'; T('add_payment_info', e); T('payment_redirect', { transaction_id: r.ref, value: r.deposit / 100, currency: 'AED', transport_type: 'beacon' }); }
+          setTimeout(function () { location.href = go; }, 250); })
+        .catch(function (ex) { err.textContent = ex.message; T('booking_error', { reason: String(ex.message || '').slice(0, 60), status: ex.status || 0 }); if (ex.status === 409) { T('slot_unavailable'); refresh(); } busy = false; btn.disabled = false; btn.textContent = 'Confirm booking'; });
     }, true);
   }
 
@@ -103,19 +119,27 @@
     $('#v-to').closest('.frow').insertAdjacentHTML('afterend', '<label for="v-remail">Recipient’s email (we email the voucher to them)</label><input id="v-remail" type="email" placeholder="optional — leave blank to receive it yourself">');
     $('#v-del').innerHTML = '<option>Email the voucher to me</option><option>Email the voucher to the recipient</option>';
     btn.textContent = 'Pay securely'; btn.classList.remove('wa');
+    $('.est', form).insertAdjacentHTML('beforebegin', AGREE.replace('@ID@', 'v-terms').replace('@NOTE@', 'You pay on Network International’s secure page (Visa / Mastercard). Sahara never sees or stores your card details. Vouchers are valid for 12 months and are non-refundable once issued.'));
+    var vs = { quoted: false, submitted: false, gone: false }, vtot = $('#v-total');
+    var vval = function () { return parseFloat((vtot.textContent || '').replace(/[^\d.]/g, '')) || 0; };
+    var vec = function () { return { currency: 'AED', value: vval(), items: [{ item_id: 'gift_voucher', item_name: 'Gift voucher', item_category: 'voucher', price: vval(), quantity: 1 }] }; };
+    new MutationObserver(function () { if (!vs.quoted && vval() > 0) { vs.quoted = true; T('begin_checkout', vec()); } }).observe(vtot, { childList: true, characterData: true, subtree: true });
+    function vleave() { if (vs.quoted && !vs.submitted && !vs.gone) { vs.gone = true; T('voucher_abandon', { transport_type: 'beacon' }); } }
+    window.addEventListener('pagehide', vleave); document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') vleave(); });
     document.addEventListener('submit', function (e) {
       if (e.target !== form) return; e.preventDefault(); e.stopImmediatePropagation(); if (busy) return;
       var v = function (id) { return ($('#' + id).value || '').trim(); };
       var amount = parseFloat(($('#v-total').textContent || '').replace(/[^\d.]/g, '')) || 0;
       if (!amount) { err.textContent = 'Please choose a treatment or enter an amount.'; return; }
       if (amount < cat.vouchers.min_amount || amount > cat.vouchers.max_amount) { err.textContent = 'Voucher value must be between AED ' + cat.vouchers.min_amount + ' and AED ' + cat.vouchers.max_amount + '.'; return; }
-      if (!v('v-name') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('v-email'))) { err.textContent = 'Please add your name and a valid email.'; return; }
+      if (!v('v-name') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('v-email'))) { err.textContent = 'Please add your name and a valid email.'; T('booking_blocked', { form: 'voucher', missing: 'name_or_email' }); return; }
+      if (!$('#v-terms').checked) { err.textContent = 'Please tick the agreement to continue.'; T('booking_blocked', { form: 'voucher', missing: 'terms' }); return; }
       var toRecipient = $('#v-del').selectedIndex === 1; if (toRecipient && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('v-remail'))) { err.textContent = 'Please add the recipient’s email.'; return; }
       err.textContent = ''; busy = true; btn.disabled = true; btn.textContent = 'Please wait…';
       api('POST', '/api/public/voucher/buy', { amount: amount, purchaser_name: v('v-name'), purchaser_phone: v('v-phone'), purchaser_email: v('v-email'), recipient_name: v('v-to'),
-        recipient_email: toRecipient ? v('v-remail') : '', occasion: $('#v-occ').value, message: v('v-msg'), website: '' })
-        .then(function (r) { location.href = r.pay_url; })
-        .catch(function (ex) { err.textContent = ex.message; busy = false; btn.disabled = false; btn.textContent = 'Pay securely'; });
+        recipient_email: toRecipient ? v('v-remail') : '', occasion: $('#v-occ').value, message: v('v-msg'), website: '', accept_terms: true })
+        .then(function (r) { vs.submitted = true; var e = vec(); e.payment_type = 'card_network_international'; T('add_payment_info', e); T('payment_redirect', { value: amount, currency: 'AED', form: 'voucher', transport_type: 'beacon' }); setTimeout(function () { location.href = r.pay_url; }, 250); })
+        .catch(function (ex) { err.textContent = ex.message; T('booking_error', { form: 'voucher', reason: String(ex.message || '').slice(0, 60) }); busy = false; btn.disabled = false; btn.textContent = 'Pay securely'; });
     }, true);
   }
 
@@ -136,18 +160,36 @@
   }
   function initConfirm() {
     var box = $('#bk-confirm'); if (!box) return;
-    var q = new URLSearchParams(location.search), st = q.get('status'), t = q.get('t'), kind = q.get('kind');
-    if (kind === 'voucher') {
-      box.innerHTML = st === 'paid' ? '<div class="panel"><h2>Thank you — payment received</h2><p>Your gift voucher is being emailed now. Check your inbox (and spam folder).</p></div>' : '<div class="panel"><h2>Payment not completed</h2><p>No money was taken. <a href="gift-vouchers.html">Try again</a>.</p></div>';
+    var q = new URLSearchParams(location.search), st = q.get('status'), t = q.get('t'), kind = q.get('kind'), ref = q.get('ref') || '', amt = +(q.get('amt') || 0);
+    var retry = kind === 'voucher' ? 'gift-vouchers.html' : (t ? 'booking-manage.html?t=' + encodeURIComponent(t) : 'book.html');
+    function stage(name, extra) { once('sah-' + name + '-' + (ref || t || 'x'), function () { var p = { transaction_id: ref, kind: kind || 'deposit' }; for (var k in (extra || {})) p[k] = extra[k]; T(name, p); }); }
+    if (st === 'failed' || st === 'cancelled' || st === 'unknown') {
+      stage(st === 'cancelled' ? 'payment_cancelled' : 'payment_failed', { value: amt / 100, currency: 'AED' });
+      var why = st === 'cancelled' ? 'You left the payment page, so no money was taken.' : 'The payment was not completed, so no money was taken.';
+      box.innerHTML = '<div class="panel"><h2>Payment not completed</h2><p>' + why + (kind === 'voucher' ? '' : ' Your booking is not confirmed yet, but your time is held for a short while.') + '</p><div class="btns"><a class="btn" href="' + retry + '">' + (kind === 'voucher' ? 'Try again' : (t ? 'Review booking and pay' : 'Book again')) + '</a><a class="btn ghost" href="' + 'https://wa.me/971502052017' + '" target="_blank" rel="noopener">Need help? WhatsApp us</a></div><p style="font-size:13px;opacity:.8">Having card problems? Try another Visa or Mastercard, or ask your bank to approve the payment.</p></div>';
       return;
     }
-    if (st === 'failed' || st === 'unknown') { box.innerHTML = '<div class="panel"><h2>Payment not completed</h2><p>Your deposit was not taken, so the booking is not confirmed yet. Your time is held for a short while — you can <a href="' + (t ? 'booking-manage.html?t=' + encodeURIComponent(t) : 'book.html') + '">review the booking</a> or <a href="book.html">book again</a>.</p></div>'; return; }
+    if (kind === 'voucher') {
+      if (st === 'paid') { stage('purchase', { value: amt / 100, currency: 'AED', items: [{ item_id: 'gift_voucher', item_name: 'Gift voucher', item_category: 'voucher', price: amt / 100, quantity: 1 }] }); box.innerHTML = '<div class="panel"><h2>Thank you — payment received</h2><p>Your gift voucher is being emailed now. Check your inbox (and spam folder). Reference ' + esc(ref) + '.</p></div>'; }
+      else { stage('payment_pending', { value: amt / 100, currency: 'AED' }); box.innerHTML = '<div class="panel"><h2>We are confirming your payment</h2><p>Your bank is still processing it. You will receive the voucher by email as soon as it is confirmed — usually within minutes.</p></div>'; }
+      return;
+    }
     if (!t) { box.innerHTML = '<div class="panel"><p>We could not find that booking. Please contact us on WhatsApp.</p></div>'; return; }
-    api('GET', '/api/public/appointment/' + encodeURIComponent(t)).then(function (a) {
-      box.innerHTML = '<div class="panel"><h2>' + (a.status === 'pending' ? 'Almost there' : 'You’re booked, ' + esc(a.client_name.split(' ')[0])) + '</h2><p>' + (a.status === 'pending' ? 'We are waiting for your deposit to confirm this booking.' : 'A confirmation has been emailed to you. Our therapist will arrive at the time below.') + '</p></div>' + apptHtml(a) +
-        '<div class="btns"><a class="btn" href="booking-manage.html?t=' + encodeURIComponent(t) + '">Manage or cancel</a></div>';
-      if (a.status !== 'pending') { box.innerHTML += reviewPanel(false); once('sah-bk-' + a.ref, function () { window.sahTrack && window.sahTrack('booking_confirmed', { transaction_id: a.ref, value: a.total / 100, currency: 'AED', deposit_paid: !!a.deposit_paid }); }); }
-    }).catch(function (ex) { box.innerHTML = '<div class="panel"><p>' + esc(ex.message) + '</p></div>'; });
+    var tries = 0;
+    function load() {
+      api('GET', '/api/public/appointment/' + encodeURIComponent(t)).then(function (a) {
+        if (a.status === 'pending' && st === 'pending' && tries++ < 6) { box.innerHTML = '<div class="panel"><h2>Confirming your payment…</h2><p>Please keep this page open for a moment while we verify it with the bank.</p></div>'; setTimeout(load, 5000); return; }
+        box.innerHTML = '<div class="panel"><h2>' + (a.status === 'pending' ? 'Almost there' : 'You’re booked, ' + esc(a.client_name.split(' ')[0])) + '</h2><p>' + (a.status === 'pending' ? 'We are waiting for your deposit to confirm this booking. If you were charged, you will receive your confirmation by email within minutes.' : 'A confirmation has been emailed to you. Our therapist will arrive at the time below.') + '</p></div>' + apptHtml(a) +
+          '<div class="btns"><a class="btn" href="booking-manage.html?t=' + encodeURIComponent(t) + '">Manage or cancel</a></div>';
+        if (a.status === 'pending') { stage('payment_pending', { value: amt / 100, currency: 'AED' }); return; }
+        box.innerHTML += reviewPanel(false);
+        once('sah-bk-' + a.ref, function () {
+          T('booking_confirmed', { transaction_id: a.ref, value: a.total / 100, currency: 'AED', deposit_paid: !!a.deposit_paid });
+          if (st === 'paid') T('purchase', { transaction_id: a.ref, value: (amt || a.deposit_paid) / 100, currency: 'AED', items: a.items.map(function (i) { return { item_id: i.name, item_name: i.name, price: i.price / 100, quantity: i.qty || 1 }; }) });
+        });
+      }).catch(function (ex) { box.innerHTML = '<div class="panel"><p>' + esc(ex.message) + '</p></div>'; });
+    }
+    load();
   }
   function initManage() {
     var box = $('#bk-manage'); if (!box) return;

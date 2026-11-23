@@ -7,9 +7,9 @@ def add(fn,html): pages[fn]=html
 add("index.html",p1.home()); add("price-list.html",p1.price_list()); add("services.html",p1.services()); add("book.html",p1.book())
 for c in CATS: add(CATS[c][2]+".html",p1.category(c))
 for it in items("massage"): add(SLUG[it[0]]+".html",p1.treatment(it))
-for f in ["packages","bridal","vouchers","therapists","areas","faqs","reviews","about","contact","terms","privacy","notfound"]:
+for f in ["packages","bridal","vouchers","therapists","areas","faqs","reviews","about","contact","terms","payments","privacy","notfound"]:
     h=getattr(p2,f)()
-    fn={"vouchers":"gift-vouchers.html","therapists":"meet-our-therapists.html","areas":"areas-we-serve.html","terms":"terms-conditions.html","privacy":"privacy-policy.html","notfound":"404.html"}.get(f,f+".html")
+    fn={"vouchers":"gift-vouchers.html","therapists":"meet-our-therapists.html","areas":"areas-we-serve.html","terms":"terms-conditions.html","privacy":"privacy-policy.html","payments":"payments-refunds.html","notfound":"404.html"}.get(f,f+".html")
     add(fn,h)
 LIVE_ONLY=[]
 if API_BASE:
@@ -57,3 +57,5 @@ for _f in _g.glob(os.path.join(OUT,'*.html')):
     _fn=os.path.basename(_f); _h=open(_f,encoding='utf-8').read(); _n=_fix(_fn,_h)
     if _n!=_h: open(_f,'w',encoding='utf-8').write(_n)
 print(len(pages),"pages built")
+
+if not (LEGAL_NAME and LICENCE_NO and TRN): print("WARNING: LEGAL_NAME / LICENCE_NO / TRN are empty in data.py - fill before taking live payments")

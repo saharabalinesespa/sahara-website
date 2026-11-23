@@ -63,7 +63,8 @@ def footer():
 <div><p class="fh">Services</p><ul>{svc}<li><a href="book.html">Book a Treatment</a></li></ul></div>
 <div><p class="fh">Contact</p><ul><li>Mobile service across Dubai</li><li>Open {HOURS}</li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="tel:+{PHONE}">{PHONE_DISPLAY}</a></li><li><a href="tel:+{PHONE2}">{PHONE2_DISPLAY}</a></li><li><a href="{WA_HELLO}" target="_blank" rel="noopener">Chat on WhatsApp</a></li></ul></div>
 </div>
-<div class="fine"><span>© 2026 Sahara Balinese Spa &amp; Salon · Dubai, UAE</span><span><a href="terms-conditions.html">Terms &amp; Cancellation</a> · <a href="privacy-policy.html">Privacy</a></span></div>
+<div class="fine"><span>© 2026 Sahara Balinese Spa &amp; Salon · Dubai, UAE</span><span><a href="terms-conditions.html">Terms</a> · <a href="payments-refunds.html">Payments &amp; Refunds</a> · <a href="privacy-policy.html">Privacy</a> · <a href="#" data-cookie-settings>Cookie settings</a></span></div>
+<p class="payline">Secure online payments by Network International (N-Genius) · Visa · Mastercard · All prices in AED including 5% VAT{(" · TRN "+TRN) if TRN else ""}{(" · Licence "+LICENCE_NO) if LICENCE_NO else ""}</p>
 </div></footer>
 <div class="mbar"><a class="a" href="{WA_HELLO}" target="_blank" rel="noopener">WhatsApp</a><a class="b" href="book.html">Book Now</a></div>
 <a class="wafab" href="{WA_HELLO}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">{WA_SVG}</a>
