@@ -22,6 +22,7 @@
   }
   function banner() {
     if (document.getElementById('sah-consent')) return;
+    if (!document.getElementById('sah-consent-css')) { var st = document.createElement('style'); st.id = 'sah-consent-css'; st.textContent = '#sah-consent{position:fixed;left:12px;right:12px;bottom:72px;z-index:99999;background:#1e1a12;color:#f5ecd6;border:1px solid #DBA83C;padding:14px 16px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;max-width:760px;margin:0 auto;font:13.5px/1.5 Arial,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.45)}#sah-consent p{margin:0;flex:1 1 280px}#sah-consent a{color:inherit;text-decoration:underline;display:inline-block;padding:10px 0}#sah-consent button{min-height:44px;min-width:96px;padding:0 18px;border:1px solid #DBA83C;background:none;color:inherit;cursor:pointer;font:inherit}#sah-consent #sah-yes{background:#DBA83C;color:#14110c;font-weight:600}@media(min-width:900px){#sah-consent{bottom:18px}}'; document.head.appendChild(st); }
     var d = document.createElement('div'); d.id = 'sah-consent'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Cookie choices');
     d.innerHTML = '<p>We use analytics cookies to see which steps of booking work and where people get stuck. They are off unless you accept. <a href="privacy-policy.html">Privacy Policy</a></p><div><button type="button" id="sah-no">Decline</button><button type="button" id="sah-yes">Accept</button></div>';
     document.body.appendChild(d);

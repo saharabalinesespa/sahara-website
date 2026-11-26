@@ -250,7 +250,6 @@
       function fill(sec, items, sum) {
         $('.gf-grid', sec).innerHTML = items.map(card).join(''); sec.hidden = false;
         var s = $('.gf-sum', sec); if (s && sum && d.own_count >= 5) s.textContent = 'Average ' + d.own_average.toFixed(1) + ' / 5 from ' + d.own_count + ' ratings collected after completed bookings';
-        var n = $('.gf-note', sec); if (n) n.textContent = 'Shown with each guest’s permission. First names only.';
       }
       if (home) fill(home, d.items.slice(0, 3), false);
       if (rev) fill(rev, d.items, true);

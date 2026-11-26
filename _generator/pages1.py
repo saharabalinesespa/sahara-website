@@ -83,7 +83,7 @@ def category(c):
     extra=""
     extra=f'<div class="grid g3" data-svc-grid="{c}" style="margin-bottom:56px">'+"".join(svc_card(i,more=("Learn more →" if i[0] in SLUG and i[0] in TX else "Book →")) for i in items(c))+'</div>'+price_rows(c)
     body=pagehero(name,f'{esc(name)} <em>at home in Dubai</em>',desc,crumbs(("Services","services.html"),(name,None)))+f'<section class="sec" style="padding-top:48px"><div class="wrap">{extra}<div class="btns"><a class="btn" href="book.html">Book a Treatment</a><a class="btn ghost" href="price-list.html">Full Price List</a></div></div></section>{cta_band()}'
-    return page(f"{slug}.html",f"{name} at Home in Dubai | Sahara Balinese Spa",f"{desc} Travel included across Dubai.",body,"services",[crumb_schema(f"{slug}.html",("Services","services.html"),(name,None))],None,f'<meta name="sah-list" content="{esc(name)}">')
+    return page(f"{slug}.html",f"{name} at Home in Dubai | Sahara Balinese Spa",(f"{desc} Travel included across Dubai." if len(desc)<=125 else f"{name} at home in Dubai: Balinese, deep tissue, Swedish, Thai and more by certified therapists. Travel included."),body,"services",[crumb_schema(f"{slug}.html",("Services","services.html"),(name,None))],None,f'<meta name="sah-list" content="{esc(name)}">')
 
 def treatment(it):
     id_=it[0]; t=TX[id_]; slug=SLUG[id_]
