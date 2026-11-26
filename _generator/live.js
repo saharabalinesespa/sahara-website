@@ -246,10 +246,10 @@
     var home = $('#gf-home'), rev = $('#gf-reviews'); if (!home && !rev) return;
     api('GET', '/api/public/testimonials').then(function (d) {
       if (!d.items.length) return;
-      var card = function (i) { return '<figure class="gf-card"><div aria-label="' + i.rating + ' out of 5" style="color:var(--gold);letter-spacing:3px">' + '★'.repeat(i.rating) + '<span style="opacity:.3">' + '★'.repeat(5 - i.rating) + '</span></div><blockquote>' + esc(i.comment) + '</blockquote><figcaption>' + esc(i.name) + (i.service ? ' · ' + esc(i.service) : '') + '<small>' + (i.source === 'site' ? 'Verified Sahara booking' : i.source === 'google' ? 'From a Google review' : 'Guest message') + '</small></figcaption></figure>'; };
+      var card = function (i) { return '<figure class="gf-card"><div aria-label="' + i.rating + ' out of 5" style="color:var(--gold);letter-spacing:3px">' + '★'.repeat(i.rating) + '<span style="opacity:.3">' + '★'.repeat(5 - i.rating) + '</span></div><blockquote>' + esc(i.comment) + '</blockquote><figcaption>' + esc(i.name) + (i.service ? ' · ' + esc(i.service) : '') + '<small>' + (i.source === 'site' ? 'Verified Sahara booking' : i.source === 'google' ? 'From a Google review' : i.source === 'other' ? 'Client review' : 'Guest message') + '</small></figcaption></figure>'; };
       function fill(sec, items, sum) {
         $('.gf-grid', sec).innerHTML = items.map(card).join(''); sec.hidden = false;
-        var s = $('.gf-sum', sec); if (s && sum) s.textContent = 'Average ' + d.average.toFixed(1) + ' / 5 from ' + d.count + ' rating' + (d.count === 1 ? '' : 's') + ' on our own booking feedback';
+        var s = $('.gf-sum', sec); if (s && sum && d.own_count >= 5) s.textContent = 'Average ' + d.own_average.toFixed(1) + ' / 5 from ' + d.own_count + ' ratings collected after completed bookings';
         var n = $('.gf-note', sec); if (n) n.textContent = 'Shown with each guest’s permission. First names only.';
       }
       if (home) fill(home, d.items.slice(0, 3), false);
